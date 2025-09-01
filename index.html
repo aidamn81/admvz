@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aiden’s Neon Castle — Movies</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-section="movies">
+  <div class="top">
+    <img class="logo" src="assets/logo.png" alt="AIDEN’S ENTERTAINMENT" />
+    <div class="nav">
+      <a id="tabMovies" class="btn-neon btn-tab">Movies</a>
+      <a id="tabTV" class="btn-neon btn-tab">TV Shows</a>
+      <a id="tabPorn" class="btn-neon btn-tab">Porn</a>
+      <button id="addBtn" class="btn-neon">Add Movie</button>
+    </div>
+    <div id="chips" class="chips"></div>
+  </div>
+  <div id="grid"></div>
+  <div id="catModal" class="modal" aria-hidden="true">
+    <div class="panel">
+      <h3>Select categories</h3>
+      <div id="cbGrid" class="grid-cb"></div>
+      <div class="modal-actions">
+        <button id="cancelPick" class="btn-neon" type="button">Cancel</button>
+        <button id="confirmPick" class="btn-neon" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+  <script id="seed-movies" type="application/json">
+[
+  {
+    "title": "28\tdays\tlater",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "28\tweeks\tlater",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "30\tDays\tof\tnight",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Addams\tFamily",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Addams\tFamily\tValues",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Angels\tin\tAmerica",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Alien",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Aliens",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Alien\t3",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Alien\t4",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Alien\tRomulus",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "A\tsimple\tfavour",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Barb\tand\tStar\tgo\tto\tVista\tDel\tMar",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Batman",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Batman\tReturns",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tBatman",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Becky",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\twrath\tof\tBecky",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Black\tSwan",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Bram\tStoker\u2019s\tDracula",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Chocholat",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Clueless",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Coyote\tUgly",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Crawl",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Cruel\tIntentions",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Dark\tcity",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Dawn\tof\tthe\tdead",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Dennis\tthe\tmenace",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Dogma",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Don\u2019t\tBreathe",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Don\u2019t\tbreathe\t2",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Edward\tScissorhands",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Elvis",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Fight\tClub",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "From\tdusk\ttill\tdawn",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "From\tDusk\ttill\tDawn:\tThe\tHangman\u2019s\tDaughter",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Ghost",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Ginger\tsnaps",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Ginger\tsnap\tunleashed",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Ginger\tSnaps\tback",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Great\texpectations",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Hail\tSatan\t-documentary",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Hedwig\tand\tthe\tangry\tinch",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "I\tknow\twhat\tyou\tdid\tlast\tsummer",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "I\tstill\tknow\twhat\tyou\tdid\tlast\tsummer",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Interview\twith\tthe\tvampire",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Jolt",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Jurassic\tPark",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Let\tme\tin",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Life\tAfter\tBeth",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Lisa\tFrankenstein",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Mary\tShelley\u2019s\tFrankenstein",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Moulin\tRouge",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Mrs\tDoubtfire",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Muse\t-\t\tSimulation\tTheory",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Natural\tBorn\tKillers",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "No\tone\twill\tsave\tyou",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Old\tpeople",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Only\tlovers\tleft\talive",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Open\thouse",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Pan\u2019s\tlabyrinth\tspanish",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Pan\u2019s\tLabyrinth\tHUNDUB",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Paris\tis\tburning\tblack\tand\twhite",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Passengers",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Perfume",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Poor\tThings",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Practical\tMagic",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Pretty\tWoman",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "P.S\tBurn\tthis\tletter\t-documentary",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Romeo\tand\tJuliet",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Romy\tand\tMichelle\u2019s\tHighschool\treunion",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Sin\tCity",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Sin\tCity\t-A\tdame\tto\tkill\tfor",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Sister\tAct",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Sister\tact\t2\t-Back\tin\tthe\thabit",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Stigmata",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Strays",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Sweeney\tTodd",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tbest\texotic\tMarigold\tHotel",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tsecond\tbest\texotic\tMarigold\tHotel",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tCraft",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tCraft\tLegacy",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tcrow",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tCrow:\tcity\tof\tangels",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tcrow:\tSalvation",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tFaculty",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tHouse\tBunny",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tGreatest\tShowman",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "There\u2019s\tsomething\tabout\tMary",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tLittle\tMermaid",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tLost\tboys",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tOpen\thouse",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tPhantom\tof\tthe\topera",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tMask",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tothers",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\tcell",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "The\twatchers",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Under\tthe\tmountain",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Urban\tLegend",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Warm\tBodies",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Wicked\tlittle\tLetters",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Wildling",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "Queen\tof\tthe\tdamned",
+    "link": "#",
+    "img": null,
+    "categories": []
+  },
+  {
+    "title": "FAVOURITESThursday,\t20\tMarch\t202522:47",
+    "link": "#",
+    "img": null,
+    "categories": []
+  }
+]
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>
