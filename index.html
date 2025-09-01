@@ -3,83 +3,193 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Aiden’s Entertainment — Movies (Sticky Header)</title>
+<title>Aiden’s Entertainment — Movies (Glow Castle)</title>
+
 <link rel="preconnect" href="https://edef3.pcloud.com" crossorigin>
 <link rel="preconnect" href="https://edef11.pcloud.com" crossorigin>
+
 <style>
-  :root{ --neon-core:#d6a4ff; --neon-mid:#a74fff; --neon-outer:#7b2cff; --card-w:3cm; --card-h:3cm; --header-z:1000 }
+  :root{
+    --neon-core:#d6a4ff; --neon-mid:#a74fff; --neon-outer:#7b2cff;
+    --card-w:3cm; --card-h:3cm;
+    --header-z: 1000;
+  }
+
   html,body{height:100%;margin:0}
   body{
-    background: radial-gradient(120% 120% at 50% 10%, #1a1630, #0b0a12 60%, #05050a 100%);
+    /* neutral fallback while the photo loads */
+    background:#0b0a12;
     font-family:'Cinzel Decorative', serif; color:#fff; overflow-x:hidden;
   }
-  .bg{position:fixed; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; opacity:0; transition:opacity .35s ease}
-  .bg.show{opacity:1}
-  header{position:sticky; top:0; z-index:var(--header-z); display:flex; flex-direction:column; align-items:center; backdrop-filter:blur(2px)}
-  .logo-wrap{display:flex; justify-content:center; align-items:center; width:100%; padding-top:6px; padding-bottom:4px}
-  .logo{display:block; width:min(520px,92vw); margin:0 auto; animation:pulseGlow 3s infinite;
-    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
-  .badge{margin-top:4px; font:700 .8rem/1 'Cinzel Decorative',serif; color:#cdbbff; opacity:.8}
-  @keyframes pulseGlow{0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}}
+
+  /* The castle photo (remote first so you always see it), then we’ll try local */
+  .bg{
+    position:fixed; inset:0; width:100%; height:100%;
+    object-fit:cover; z-index:-2; opacity:0; transition:opacity .35s ease;
+  }
+  .bg.show{ opacity:1; }
+
+  /* Pulsing neon glow OVER the castle image, but UNDER content */
+  .bg-glow{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(60% 30% at 50% 10%, rgba(167,79,255,.55), rgba(167,79,255,.12) 40%, transparent 70%),
+      radial-gradient(45% 20% at 50% 8%, rgba(214,164,255,.45), transparent 60%);
+    animation: glowPulse 4.2s ease-in-out infinite, glowFlicker 7s linear infinite;
+    mix-blend-mode: screen;  /* lets the lavenders bloom over the castle */
+  }
+  @keyframes glowPulse{
+    0%,100%{opacity:.55; filter:blur(0px)}
+    50%{opacity:.95; filter:blur(1px)}
+  }
+  @keyframes glowFlicker{
+    0%,19%,21%,23%,25%,54%,56%,100%{filter:brightness(1)}
+    20%,24%,55%{filter:brightness(1.15)}
+  }
+
+  /* Sticky header: logo at the very top, menu directly below */
+  header{
+    position:sticky; top:0; z-index:var(--header-z);
+    display:flex; flex-direction:column; align-items:center;
+    backdrop-filter: blur(1.5px);
+  }
+  .logo-wrap{
+    display:flex; justify-content:center; align-items:center; width:100%;
+    padding-top:6px; padding-bottom:4px;
+  }
+  .logo{
+    display:block; width:min(520px,92vw); margin:0 auto;
+    animation:logoPulse 3s infinite;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
+  }
+  @keyframes logoPulse{
+    0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
+    50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}
+  }
+
   .nav-bar{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:8px 10px}
-  .btn-neon{padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px; background:#111; color:var(--neon-core);
-    border:2px solid var(--neon-core); border-radius:12px; cursor:pointer; box-shadow:0 0 10px var(--neon-outer), inset 0 0 10px rgba(167,79,255,.25); text-decoration:none}
-  .btn-neon:hover{background:var(--neon-core); color:#000} .btn-tab.active{background:var(--neon-core); color:#000}
+  .btn-neon{
+    padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
+    background:#111; color:var(--neon-core);
+    border:2px solid var(--neon-core); border-radius:12px; cursor:pointer;
+    box-shadow:0 0 10px var(--neon-outer), inset 0 0 10px rgba(167,79,255,.25);
+    text-decoration:none;
+  }
+  .btn-neon:hover{background:var(--neon-core); color:#000}
+  .btn-tab.active{background:var(--neon-core); color:#000}
+
   .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 10px}
-  .chip{padding:5px 10px; border:1px solid var(--neon-mid); border-radius:999px; cursor:pointer; color:#e9ddff; background:rgba(16,12,28,.55);
-    box-shadow:inset 0 0 12px rgba(167,79,255,.25), 0 0 12px rgba(123,44,255,.18); font-size:.88rem}
+  .chip{
+    padding:5px 10px; border:1px solid var(--neon-mid); border-radius:999px; cursor:pointer;
+    color:#e9ddff; background:rgba(16,12,28,.55);
+    box-shadow:inset 0 0 12px rgba(167,79,255,.25), 0 0 12px rgba(123,44,255,.18);
+    font-size:.88rem; user-select:none;
+  }
   .chip.active{border-color:#fff; color:#fff; box-shadow:0 0 16px rgba(184,108,255,.55), inset 0 0 14px rgba(184,108,255,.25)}
   .chip .count{opacity:.8; font-size:.8em}
-  main{padding:8px 10px 48px}
+
+  main{ padding: 8px 10px 48px; }
+
   #grid{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:0}
+
   .card{display:inline-block; text-align:center; max-width:calc(var(--card-w) + 2rem)}
-  .window{position:relative; width:var(--card-w); height:var(--card-h); border-radius:12px; overflow:hidden; display:block;
-    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
+  .window{
+    position:relative; width:var(--card-w); height:var(--card-h);
+    border-radius:12px; overflow:hidden; display:block;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
+  }
   .window img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block}
-  .placeholder{width:100%; height:100%; display:grid; place-items:center; background:rgba(8,8,12,.55); color:#cdbbff; font-weight:700; text-shadow:0 0 8px rgba(167,79,255,.4); border-radius:12px}
-  .window::after{content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none; border:3px solid var(--neon-core);
-    box-shadow:0 0 6px 2px #c27fff, 0 0 12px 4px var(--neon-mid), 0 0 24px 6px var(--neon-outer), 0 0 48px 10px rgba(123,44,255,.6); animation:flicker 3s infinite}
-  @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
-  .row-head{display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px}
-  .title{font-size:.9rem; color:#e6dcff; text-shadow:0 0 8px rgba(167,79,255,.45)} .title a{color:#e6dcff; text-decoration:none} .title a:hover{text-decoration:underline}
-  .menu{position:relative; display:inline-block}
-  .more-btn{padding:2px 8px; line-height:1.2; border-radius:10px; cursor:pointer; border:1px solid var(--neon-core); background:rgba(18,14,28,.7); color:var(--neon-core);
-    box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2); font-weight:800}
-  .more-btn:hover{background:var(--neon-core); color:#000}
-  .menu-panel{position:absolute; left:50%; transform:translateX(-50%); margin-top:6px; min-width:180px; z-index:5; background:#100e1a; border:1px solid var(--neon-mid);
-    border-radius:12px; box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18); padding:6px; display:none}
-  .menu.open .menu-panel{display:block}
-  .menu-item{display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0; background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer}
-  .menu-item:hover{background:var(--neon-core); color:#000; border-color:var(--neon-core)}
+  .placeholder{
+    width:100%; height:100%; display:grid; place-items:center;
+    background:rgba(8,8,12,.55); color:#cdbbff; font-weight:700;
+    text-shadow:0 0 8px rgba(167,79,255,.4); border-radius:12px;
+  }
+  .window::after{
+    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
+    border:3px solid var(--neon-core);
+    box-shadow:0 0 6px 2px #c27fff, 0 0 12px 4px var(--neon-mid), 0 0 24px 6px var(--neon-outer), 0 0 48px 10px rgba(123,44,255,.6);
+    animation:frameFlicker 3s infinite;
+  }
+  @keyframes frameFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
+
+  .row-head{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px }
+  .title{ font-size:.9rem; color:#e6dcff; text-shadow:0 0 8px rgba(167,79,255,.45) }
+  .title a{ color:#e6dcff; text-decoration:none } .title a:hover{ text-decoration:underline }
+
+  .menu{ position:relative; display:inline-block }
+  .more-btn{
+    padding:2px 8px; line-height:1.2; border-radius:10px; cursor:pointer;
+    border:1px solid var(--neon-core); background:rgba(18,14,28,.7); color:var(--neon-core);
+    box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2);
+    font-weight:800;
+  }
+  .more-btn:hover{ background:var(--neon-core); color:#000 }
+  .menu-panel{
+    position:absolute; left:50%; transform:translateX(-50%);
+    margin-top:6px; min-width:180px; z-index:5;
+    background:#100e1a; border:1px solid var(--neon-mid); border-radius:12px;
+    box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18);
+    padding:6px; display:none;
+  }
+  .menu.open .menu-panel{ display:block; }
+  .menu-item{
+    display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0;
+    background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer;
+  }
+  .menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
+
   .chosen{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:6px}
-  .chosen .cat{padding:3px 8px; border:1px solid rgba(184,108,255,.65); border-radius:999px; font-size:.72rem; color:#f0e8ff; background:rgba(24,18,38,.55); box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16)}
+  .chosen .cat{
+    padding:3px 8px; border:1px solid rgba(184,108,255,.65); border-radius:999px; font-size:.72rem;
+    color:#f0e8ff; background:rgba(24,18,38,.55);
+    box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16);
+  }
 </style>
 </head>
 <body data-section="movies">
-  <!-- Background: remote first (cache-busted), fades in -->
-  <img id="bg" class="bg" fetchpriority="high" decoding="async"
-       src="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=4" alt="" />
 
-  <header id="hdr">
+  <!-- Castle image (remote first), fades in -->
+  <img
+    id="bg"
+    class="bg"
+    fetchpriority="high"
+    decoding="async"
+    alt=""
+    src="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=6"
+  />
+  <!-- The pulsing lavender glow layer -->
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header>
     <div class="logo-wrap">
-      <img id="logo" class="logo" fetchpriority="high" decoding="async"
-           src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=4"
-           alt="AIDEN’S ENTERTAINMENT" />
+      <!-- Logo at the very top -->
+      <img
+        id="logo"
+        class="logo"
+        fetchpriority="high"
+        decoding="async"
+        src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=6"
+        alt="AIDEN’S ENTERTAINMENT"
+      />
     </div>
-    <div class="badge">BUILD v4</div>
 
+    <!-- Menu directly under the logo -->
     <nav class="nav-bar">
       <a id="tabMovies" class="btn-neon btn-tab">Movies</a>
       <a id="tabTV" class="btn-neon btn-tab">TV Shows</a>
       <a id="tabPorn" class="btn-neon btn-tab">Porn</a>
       <button id="addBtn" class="btn-neon">Add Movie</button>
     </nav>
+
+    <!-- Category chips -->
     <div id="chips" class="chips"></div>
   </header>
 
-  <main><div id="grid"></div></main>
+  <main>
+    <div id="grid"></div>
+  </main>
 
-  <!-- Category picker modal -->
+  <!-- Category picker -->
   <div id="catModal" class="modal" aria-hidden="true">
     <div class="panel">
       <h3>Select categories</h3>
@@ -91,7 +201,7 @@
     </div>
   </div>
 
-  <!-- Seed once (replace with your full list if you want to reseed) -->
+  <!-- One-time seed (replace with your full list to reseed) -->
   <script id="seed-movies" type="application/json">
   [
     { "title": "28 Days Later", "link": "#", "img": null, "categories": ["horror"] },
@@ -101,21 +211,24 @@
   </script>
 
 <script>
-  // -------- Core app (same features) --------
+  /* === App JS (unchanged features) === */
   const CATS = ['horror','thriller','fantasy','sci-fi','comedy','cartoon','porn','other'];
   const STORAGE_KEYS = { movies:'castle.movies.v10', tv:'castle.tv.v10', porn:'castle.porn.v10' };
   let section = document.body.dataset.section || 'movies';
   let currentFilter = 'All';
   const load = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEYS[section])) || []; } catch { return []; } };
   const save = (items) => localStorage.setItem(STORAGE_KEYS[section], JSON.stringify(items));
+
   function setActiveTab(){ document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
     const el = document.querySelector({movies:'#tabMovies', tv:'#tabTV', porn:'#tabPorn'}[section]); if(el) el.classList.add('active');
     const addBtn = document.getElementById('addBtn'); if(addBtn) addBtn.textContent = section==='tv'?'Add Show':(section==='movies'?'Add Movie':'Add Link'); }
+
   function renderChips(items){ const wrap=document.getElementById('chips'); wrap.innerHTML='';
     const countFor=(c)=>items.filter(i=>(i.categories||[]).includes(c)).length;
     ['All',...CATS].forEach(c=>{ const chip=document.createElement('div'); chip.className='chip'+(c===currentFilter?' active':'');
       const count=c==='All'?items.length:countFor(c); chip.innerHTML=`<span>${c}</span> <span class="count">(${count})</span>`;
       chip.onclick=()=>{currentFilter=c; render()}; wrap.appendChild(chip); }); }
+
   function openPicker(preset=[]){ return new Promise(res=>{ const modal=document.getElementById('catModal'), grid=document.getElementById('cbGrid');
       grid.innerHTML=''; CATS.forEach(c=>{ const row=document.createElement('label'); row.className='opt';
         row.innerHTML=`<input type="checkbox" value="${c}" ${preset.includes(c)?'checked':''}><span>${c}</span>`; grid.appendChild(row); });
@@ -123,6 +236,7 @@
       const onOK=()=>{const picked=[...grid.querySelectorAll('input:checked')].map(i=>i.value); cleanup(); res(picked)};
       const onCancel=()=>{cleanup(); res(null)}; function cleanup(){ok.removeEventListener('click',onOK);cancel.removeEventListener('click',onCancel);modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
       ok.addEventListener('click',onOK); cancel.addEventListener('click',onCancel); modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }); }
+
   function makeMenu(onEditLink,onChangeCover,onEditCats,onDelete){ const wrap=document.createElement('div'); wrap.className='menu';
       const btn=document.createElement('button'); btn.className='more-btn'; btn.textContent='…';
       const panel=document.createElement('div'); panel.className='menu-panel';
@@ -132,6 +246,7 @@
       btn.onclick=(e)=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open')};
       document.addEventListener('click',(ev)=>{if(!wrap.contains(ev.target)) wrap.classList.remove('open')});
       wrap.appendChild(btn); wrap.appendChild(panel); return wrap; }
+
   function card(item,idx,items){ const c=document.createElement('div'); c.className='card';
       const a=document.createElement('a'); a.className='window'; a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
       a.innerHTML=item.img?`<img src="${item.img}" alt="">`:`<div class="placeholder">No Thumbnail</div>`; c.appendChild(a);
@@ -144,6 +259,7 @@
       head.appendChild(menu); c.appendChild(head);
       const chosen=document.createElement('div'); chosen.className='chosen';
       (item.categories||[]).forEach(cat=>{const s=document.createElement('span'); s.className='cat'; s.textContent=cat; chosen.appendChild(s)}); c.appendChild(chosen); return c; }
+
   function render(){ setActiveTab(); const items=load(); renderChips(items); const grid=document.getElementById('grid'); grid.innerHTML='';
       const vis=(currentFilter==='All')?items:items.filter(x=>(x.categories||[]).includes(currentFilter)); vis.forEach(it=>grid.appendChild(card(it, items.indexOf(it), items))); }
   async function addItem(){ const link=prompt(`Enter the ${section==='tv'?'show':'link'} (URL):`)||'#';
@@ -151,17 +267,28 @@
       const categories=await openPicker([]); if(categories===null) return;
       const img=prompt('Thumbnail image URL (optional):')||null; const items=load(); items.push({link,title,img,categories:[...new Set(categories)]}); save(items); currentFilter='All'; render();}
   function setSection(s){ section=s; currentFilter='All'; render(); }
+
   function preloadOnce(){ if(section!=='movies') return; const key=STORAGE_KEYS.movies; if(localStorage.getItem(key)) return;
-      const tag=document.getElementById('seed-movies'); if(!tag) return; try{const data=JSON.parse(tag.textContent.trim()||'[]'); localStorage.setItem(key, JSON.stringify(data));}catch(e){console.error('Seed parse failed',e)}}
-  function showBgWhenLoaded(){ const bg=document.getElementById('bg'); if(bg.complete) bg.classList.add('show'); else bg.addEventListener('load',()=>bg.classList.add('show')); }
-  function trySwapToLocal(){ const bg=document.getElementById('bg'); const testBg=new Image(); testBg.onload=()=>{ bg.src='assets/castlebg.jpeg?v=4' }; testBg.src='assets/castlebg.jpeg?v=4';
-      const logo=document.getElementById('logo'); const testLogo=new Image(); testLogo.onload=()=>{ logo.src='assets/logo.png?v=4' }; testLogo.src='assets/logo.png?v=4'; }
+      const tag=document.getElementById('seed-movies'); if(!tag) return; try{const data=JSON.parse(tag.textContent.trim()||'[]'); localStorage.setItem(key, JSON.stringify(data));}catch(e){console.error('Seed parse failed',e)} }
+
+  /* Background & logo: show remote immediately, then swap to local if present */
+  function setupImages(){
+    const bg=document.getElementById('bg');
+    if(bg.complete) bg.classList.add('show'); else bg.addEventListener('load',()=>bg.classList.add('show'));
+
+    const testBg=new Image(); testBg.onload=()=>{ bg.src='assets/castlebg.jpeg?v=6' }; testBg.src='assets/castlebg.jpeg?v=6';
+    const logo=document.getElementById('logo'); const testLogo=new Image(); testLogo.onload=()=>{ logo.src='assets/logo.png?v=6' }; testLogo.src='assets/logo.png?v=6';
+  }
+
   window.addEventListener('DOMContentLoaded', ()=>{
-    console.log('Aiden build v4'); preloadOnce(); showBgWhenLoaded(); trySwapToLocal();
+    preloadOnce();
+    setupImages();
+
     document.getElementById('tabMovies')?.addEventListener('click', ()=>setSection('movies'));
     document.getElementById('tabTV')?.addEventListener('click', ()=>setSection('tv'));
     document.getElementById('tabPorn')?.addEventListener('click', ()=>setSection('porn'));
     document.getElementById('addBtn')?.addEventListener('click', addItem);
+
     render();
   });
 </script>
