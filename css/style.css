@@ -4,10 +4,47 @@
 }
 
 html,body{height:100%;margin:0}
+html,body{height:100%;margin:0}
+
+/* Two-image fallback: if the local file fails, the remote one still shows */
 body{
-  background:#0a0a12 url('./assets/castlebg.jpeg') no-repeat center top/cover;
-  font-family:'Cinzel Decorative', serif; color:#fff; text-align:center; overflow-x:hidden;
+  background-color:#0a0a12;
+  background-image:
+    url('./assets/castlebg.jpeg'),
+    url('https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg');
+  background-repeat:no-repeat,no-repeat;
+  background-position:center top, center top;
+  background-size:cover, cover;
+  font-family:'Cinzel Decorative', serif;
+  color:#fff; text-align:center; overflow-x:hidden;
 }
+
+/* … menu under title */
+.row-head{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px }
+.more-btn{
+  padding:2px 8px; line-height:1.2; border-radius:10px; cursor:pointer;
+  border:1px solid var(--neon-core); background:rgba(18,14,28,.7); color:var(--neon-core);
+  box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2);
+  font-weight:800;
+}
+.more-btn:hover{ background:var(--neon-core); color:#000 }
+
+.menu{
+  position:relative; display:inline-block;
+}
+.menu-panel{
+  position:absolute; left:50%; transform:translateX(-50%);
+  margin-top:6px; min-width:180px; z-index:5;
+  background:#100e1a; border:1px solid var(--neon-mid); border-radius:12px;
+  box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18);
+  padding:6px; display:none;
+}
+.menu.open .menu-panel{ display:block; }
+.menu-item{
+  display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0;
+  background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer;
+}
+.menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
 
 .top{display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:4px;}
 .logo{display:block; width:420px; max-width:92%; margin:0 auto 2px; animation:pulseGlow 3s infinite;}
