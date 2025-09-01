@@ -46,7 +46,14 @@ body{
 }
 .menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
 
-.top{display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:4px;}
+.top{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;              /* small breathing space */
+  margin:0;             /* remove top margin */
+  padding-top:0;        /* no padding at top */
+}
 .logo{display:block; width:420px; max-width:92%; margin:0 auto 2px; animation:pulseGlow 3s infinite;}
 @keyframes pulseGlow{
   0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
