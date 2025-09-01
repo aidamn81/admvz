@@ -1,37 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Aiden’s Neon Castle — Movies</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Aiden’s Neon Castle — Movies</title>
+
+<style>
+  :root{
+    --neon-core:#d6a4ff; --neon-mid:#a74fff; --neon-outer:#7b2cff;
+    --card-w:3cm; --card-h:3cm;
+  }
+
+  html,body{height:100%;margin:0}
+
+  /* Use REMOTE background first so it always appears. JS will swap to local if present. */
+  body{
+    background-color:#0a0a12;
+    background-image:url('https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg');
+    background-repeat:no-repeat;
+    background-position:center top;
+    background-size:cover;
+    font-family:'Cinzel Decorative', serif; color:#fff; text-align:center; overflow-x:hidden;
+  }
+
+  /* Top: logo absolutely at top; content starts right beneath */
+  .top{display:flex; flex-direction:column; align-items:center; gap:6px; margin:0; padding-top:0;}
+  .logo{
+    display:block; width:420px; max-width:92%; margin:0 auto 4px;
+    animation:pulseGlow 3s infinite;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
+  }
+  @keyframes pulseGlow{
+    0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
+    50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}
+  }
+
+  /* Nav */
+  .nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:0;}
+  .btn-neon{
+    padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
+    background:#111; color:var(--neon-core);
+    border:2px solid var(--neon-core); border-radius:12px; cursor:pointer;
+    box-shadow:0 0 10px var(--neon-outer), inset 0 0 10px rgba(167,79,255,.25);
+    text-decoration:none;
+  }
+  .btn-neon:hover{background:var(--neon-core); color:#000}
+  .btn-tab.active{background:var(--neon-core); color:#000}
+
+  /* Chips */
+  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:2px 0 6px}
+  .chip{
+    padding:5px 10px; border:1px solid var(--neon-mid); border-radius:999px; cursor:pointer;
+    color:#e9ddff; background:rgba(16,12,28,.55);
+    box-shadow:inset 0 0 12px rgba(167,79,255,.25), 0 0 12px rgba(123,44,255,.18);
+    font-size:.88rem; user-select:none;
+  }
+  .chip.active{border-color:#fff; color:#fff; box-shadow:0 0 16px rgba(184,108,255,.55), inset 0 0 14px rgba(184,108,255,.25)}
+  .chip .count{opacity:.8; font-size:.8em}
+
+  /* Grid */
+  #grid{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; padding:0 10px 40px; margin:0}
+
+  /* Card (neon frame, image not tinted) */
+  .card{display:inline-block; text-align:center; max-width:calc(var(--card-w) + 2rem)}
+  .window{
+    position:relative; width:var(--card-w); height:var(--card-h);
+    border-radius:12px; overflow:hidden; display:block;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
+  }
+  .window img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block}
+
+  .placeholder{
+    width:100%; height:100%; display:grid; place-items:center;
+    background:rgba(8,8,12,.55); color:#cdbbff; font-weight:700;
+    text-shadow:0 0 8px rgba(167,79,255,.4); border-radius:12px;
+  }
+
+  .window::after{
+    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
+    border:3px solid var(--neon-core);
+    box-shadow:0 0 6px 2px #c27fff, 0 0 12px 4px var(--neon-mid), 0 0 24px 6px var(--neon-outer), 0 0 48px 10px rgba(123,44,255,.6);
+    animation:flicker 3s infinite;
+  }
+  @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
+
+  /* Title + … menu */
+  .row-head{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px }
+  .title{ font-size:.9rem; color:#e6dcff; text-shadow:0 0 8px rgba(167,79,255,.45) }
+  .title a{ color:#e6dcff; text-decoration:none } .title a:hover{ text-decoration:underline }
+
+  .menu{ position:relative; display:inline-block }
+  .more-btn{
+    padding:2px 8px; line-height:1.2; border-radius:10px; cursor:pointer;
+    border:1px solid var(--neon-core); background:rgba(18,14,28,.7); color:var(--neon-core);
+    box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2);
+    font-weight:800;
+  }
+  .more-btn:hover{ background:var(--neon-core); color:#000 }
+  .menu-panel{
+    position:absolute; left:50%; transform:translateX(-50%);
+    margin-top:6px; min-width:180px; z-index:5;
+    background:#100e1a; border:1px solid var(--neon-mid); border-radius:12px;
+    box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18);
+    padding:6px; display:none;
+  }
+  .menu.open .menu-panel{ display:block }
+  .menu-item{
+    display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0;
+    background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer;
+  }
+  .menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
+  .chosen{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:6px}
+  .chosen .cat{
+    padding:3px 8px; border:1px solid rgba(184,108,255,.65); border-radius:999px; font-size:.72rem;
+    color:#f0e8ff; background:rgba(24,18,38,.55); box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16);
+  }
+  /* Modal */
+  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(5,5,10,.6); z-index:50; backdrop-filter: blur(3px)}
+  .modal.open{display:grid}
+  .panel{width:min(520px,92vw); background:#110f1b; border:1px solid var(--neon-mid); border-radius:14px; padding:14px; box-shadow:0 0 24px rgba(184,108,255,.35), inset 0 0 16px rgba(184,108,255,.18); text-align:left}
+  .panel h3{margin:0 0 10px; color:#f0e8ff; text-shadow:0 0 8px rgba(184,108,255,.4)}
+  .grid-cb{display:flex; flex-wrap:wrap; gap:10px}
+  .opt{display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:12px; border:1px solid rgba(184,108,255,.5); background:#17142a; color:#eadeff; box-shadow:inset 0 0 10px rgba(184,108,255,.18)}
+  .opt input{accent-color:#b86cff; width:18px; height:18px}
+  .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:12px}
+</style>
 </head>
 <body data-section="movies">
   <div class="top">
-    <!-- Logo with fallback -->
+    <!-- Use REMOTE logo first so it always shows; JS will swap to local if present -->
     <img
       class="logo"
-      src="assets/logo.png"
+      src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png"
       alt="AIDEN’S ENTERTAINMENT"
-      onerror="this.onerror=null;this.src='https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png';"
     />
 
-    <!-- Navigation -->
     <div class="nav">
       <a id="tabMovies" class="btn-neon btn-tab">Movies</a>
-      <a id="tabTV" class="btn-neon btn-tab" href="tv.html">TV Shows</a>
-      <a id="tabPorn" class="btn-neon btn-tab" href="porn.html">Porn</a>
+      <a id="tabTV" class="btn-neon btn-tab">TV Shows</a>
+      <a id="tabPorn" class="btn-neon btn-tab">Porn</a>
       <button id="addBtn" class="btn-neon">Add Movie</button>
     </div>
 
-    <!-- Filter chips -->
     <div id="chips" class="chips"></div>
   </div>
 
-  <!-- Grid -->
   <div id="grid"></div>
 
-  <!-- Category picker modal -->
   <div id="catModal" class="modal" aria-hidden="true">
     <div class="panel">
       <h3>Select categories</h3>
@@ -43,14 +158,168 @@
     </div>
   </div>
 
-  <!-- One-time seed list (paste your full array here).
-       If you already have the 104-item seed, keep it here. -->
+  <!-- One-time seed (replace with your full list to reseed) -->
   <script id="seed-movies" type="application/json">
   [
-    { "title": "Sample Title", "link": "#", "img": null, "categories": [] }
+    { "title": "28 Days Later", "link": "#", "img": null, "categories": ["horror"] },
+    { "title": "Addams Family", "link": "#", "img": null, "categories": ["fantasy","comedy"] },
+    { "title": "Interstellar", "link": "#", "img": null, "categories": ["sci-fi"] }
   ]
   </script>
 
-  <script src="js/app.js"></script>
+<script>
+  /* ===== JS App (inline for testing) ===== */
+
+  const CATS = ['horror','thriller','fantasy','sci-fi','comedy','cartoon','porn','other'];
+  const STORAGE_KEYS = { movies:'castle.movies.v10', tv:'castle.tv.v10', porn:'castle.porn.v10' };
+
+  let section = document.body.dataset.section || 'movies';
+  let currentFilter = 'All';
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEYS[section])) || []; } catch { return []; } };
+  const save = (items) => localStorage.setItem(STORAGE_KEYS[section], JSON.stringify(items));
+
+  function setActiveTab(){
+    document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
+    const ids = {movies:'#tabMovies', tv:'#tabTV', porn:'#tabPorn'};
+    const el = document.querySelector(ids[section]); if(el) el.classList.add('active');
+    const addBtn = document.getElementById('addBtn');
+    if(addBtn) addBtn.textContent = section==='tv' ? 'Add Show' : (section==='movies' ? 'Add Movie' : 'Add Link');
+  }
+
+  function renderChips(items){
+    const wrap = document.getElementById('chips'); if(!wrap) return;
+    wrap.innerHTML = '';
+    const countFor = (cat) => items.filter(it => (it.categories||[]).includes(cat)).length;
+    ['All', ...CATS].forEach(cat=>{
+      const chip = document.createElement('div');
+      chip.className = 'chip' + (cat===currentFilter ? ' active':''); 
+      const count = (cat==='All') ? items.length : countFor(cat);
+      chip.innerHTML = `<span>${cat}</span> <span class="count">(${count})</span>`;
+      chip.onclick = ()=>{ currentFilter = cat; render(); };
+      wrap.appendChild(chip);
+    });
+  }
+
+  function openPicker(preset=[]){
+    return new Promise((resolve)=>{
+      const modal = document.getElementById('catModal');
+      const grid = document.getElementById('cbGrid');
+      grid.innerHTML = '';
+      CATS.forEach(cat=>{
+        const row = document.createElement('label'); row.className='opt';
+        row.innerHTML = `<input type="checkbox" value="${cat}" ${preset.includes(cat)?'checked':''}><span>${cat}</span>`;
+        grid.appendChild(row);
+      });
+      const ok = document.getElementById('confirmPick');
+      const cancel = document.getElementById('cancelPick');
+      const onOK = ()=>{ const picked = [...grid.querySelectorAll('input:checked')].map(i=>i.value); cleanup(); resolve(picked); };
+      const onCancel = ()=>{ cleanup(); resolve(null); };
+      function cleanup(){ ok.removeEventListener('click', onOK); cancel.removeEventListener('click', onCancel); modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+      ok.addEventListener('click', onOK); cancel.addEventListener('click', onCancel);
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    });
+  }
+
+  function makeMenu(onEditLink, onChangeCover, onEditCats, onDelete){
+    const wrap = document.createElement('div'); wrap.className = 'menu';
+    const btn = document.createElement('button'); btn.className = 'more-btn'; btn.textContent = '…';
+    const panel = document.createElement('div'); panel.className = 'menu-panel';
+    const mk = (label, handler)=>{ const b=document.createElement('button'); b.className='menu-item'; b.textContent=label; b.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); handler(); wrap.classList.remove('open'); }; return b; };
+    panel.appendChild(mk('Edit Link', onEditLink));
+    panel.appendChild(mk('Change Cover', onChangeCover));
+    panel.appendChild(mk('Edit Categories', onEditCats));
+    panel.appendChild(mk('Delete', onDelete));
+    btn.onclick = (e)=>{ e.preventDefault(); e.stopPropagation(); wrap.classList.toggle('open'); };
+    document.addEventListener('click', (ev)=>{ if(!wrap.contains(ev.target)) wrap.classList.remove('open'); });
+    wrap.appendChild(btn); wrap.appendChild(panel);
+    return wrap;
+  }
+
+  function card(item, idx, items){
+    const c = document.createElement('div'); c.className = 'card';
+
+    const a = document.createElement('a'); a.className='window'; a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
+    a.innerHTML = item.img ? `<img src="${item.img}" alt="">` : `<div class="placeholder">No Thumbnail</div>`;
+    c.appendChild(a);
+
+    const head = document.createElement('div'); head.className = 'row-head';
+    const title = document.createElement('div'); title.className='title';
+    title.innerHTML = `<a href="${item.link||'#'}" target="_blank" rel="noopener">${item.title||'Untitled'}</a>`;
+    head.appendChild(title);
+
+    const menu = makeMenu(
+      ()=>{ const url = prompt('Enter the link (URL):', item.link || ''); if(url===null) return; const data=load(); data[idx].link=(url.trim()||'#'); save(data); render(); },
+      ()=>{ const url = prompt('Thumbnail image URL (leave blank to remove):', item.img||''); if(url===null) return; const data=load(); data[idx].img=(url.trim()||null); save(data); render(); },
+      async ()=>{ const picked=await openPicker(item.categories||[]); if(picked===null) return; const data=load(); data[idx].categories=[...new Set(picked)]; save(data); render(); },
+      ()=>{ if(confirm('Delete this item?')){ const data=load(); data.splice(idx,1); save(data); render(); } }
+    );
+
+    head.appendChild(menu);
+    c.appendChild(head);
+
+    const chosen = document.createElement('div'); chosen.className='chosen';
+    (item.categories||[]).forEach(cat=>{ const chip=document.createElement('span'); chip.className='cat'; chip.textContent=cat; chosen.appendChild(chip); });
+    c.appendChild(chosen);
+
+    return c;
+  }
+
+  function render(){
+    setActiveTab();
+    const items = load();
+    renderChips(items);
+    const grid = document.getElementById('grid'); grid.innerHTML = '';
+    const visible = (currentFilter==='All') ? items : items.filter(x => (x.categories||[]).includes(currentFilter));
+    visible.forEach(it => grid.appendChild(card(it, items.indexOf(it), items)));
+  }
+
+  async function addItem(){
+    const link = prompt(`Enter the ${section==='tv'?'show':'link'} (URL):`) || '#';
+    const title = prompt(`Enter a title for this ${section==='tv'?'show':'link'}:`) || 'Untitled';
+    const categories = await openPicker([]); if(categories===null) return;
+    const img = prompt('Thumbnail image URL (optional):') || null;
+    const items = load(); items.push({ link, title, img, categories:[...new Set(categories)] });
+    save(items); currentFilter='All'; render();
+  }
+
+  function setSection(newSection){ section = newSection; currentFilter='All'; render(); }
+
+  /* Seed once */
+  function preloadOnce(){
+    if(section!=='movies') return;
+    const key = STORAGE_KEYS.movies;
+    if(localStorage.getItem(key)) return;
+    const tag = document.getElementById('seed-movies'); if(!tag) return;
+    try{ const data = JSON.parse(tag.textContent.trim() || '[]'); localStorage.setItem(key, JSON.stringify(data)); }
+    catch(e){ console.error('Seed parse failed', e); }
+  }
+
+  /* Fallback: after load, try to switch to local assets if they exist */
+  function trySwapToLocalImages(){
+    // background
+    const testBg = new Image();
+    testBg.onload = ()=>{ document.body.style.backgroundImage = "url('assets/castlebg.jpeg')"; };
+    testBg.src = 'assets/castlebg.jpeg';
+
+    // logo
+    const logo = document.querySelector('.logo');
+    const testLogo = new Image();
+    testLogo.onload = ()=>{ if(logo) logo.src = 'assets/logo.png'; };
+    testLogo.src = 'assets/logo.png';
+  }
+
+  window.addEventListener('DOMContentLoaded', ()=>{
+    preloadOnce();
+    trySwapToLocalImages();
+
+    document.getElementById('tabMovies')?.addEventListener('click', ()=>setSection('movies'));
+    document.getElementById('tabTV')?.addEventListener('click', ()=>setSection('tv'));
+    document.getElementById('tabPorn')?.addEventListener('click', ()=>setSection('porn'));
+    document.getElementById('addBtn')?.addEventListener('click', addItem);
+
+    render();
+  });
+</script>
 </body>
 </html>
