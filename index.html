@@ -3,30 +3,45 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Aiden’s Neon Castle — Movies</title>
+<title>Aiden’s Entertainment — Movies (Sticky Header)</title>
+
+<!-- Preconnect to speed up the remote image -->
+<link rel="preconnect" href="https://edef3.pcloud.com" crossorigin>
+<link rel="preconnect" href="https://edef11.pcloud.com" crossorigin>
 
 <style>
   :root{
     --neon-core:#d6a4ff; --neon-mid:#a74fff; --neon-outer:#7b2cff;
     --card-w:3cm; --card-h:3cm;
+    --header-z: 1000;
   }
 
   html,body{height:100%;margin:0}
-
-  /* Use REMOTE background first so it always appears. JS will swap to local if present. */
   body{
-    background-color:#0a0a12;
-    background-image:url('https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg');
-    background-repeat:no-repeat;
-    background-position:center top;
-    background-size:cover;
-    font-family:'Cinzel Decorative', serif; color:#fff; text-align:center; overflow-x:hidden;
+    /* instant fallback while the image loads */
+    background: radial-gradient(120% 120% at 50% 10%, #1a1630, #0b0a12 60%, #05050a 100%);
+    font-family:'Cinzel Decorative', serif; color:#fff; overflow-x:hidden;
   }
 
-  /* Top: logo absolutely at top; content starts right beneath */
-  .top{display:flex; flex-direction:column; align-items:center; gap:6px; margin:0; padding-top:0;}
+  /* Background IMG (fades in fast, then swaps to local if present) */
+  .bg{
+    position:fixed; inset:0; width:100%; height:100%;
+    object-fit:cover; z-index:-1; opacity:0; transition:opacity .35s ease;
+  }
+  .bg.show{ opacity:1; }
+
+  /* Sticky header: logo at absolute top, nav right under it */
+  header{
+    position:sticky; top:0; z-index:var(--header-z);
+    display:flex; flex-direction:column; align-items:center;
+    backdrop-filter: blur(2px);
+  }
+  .logo-wrap{
+    display:flex; justify-content:center; align-items:center; width:100%;
+    padding-top:6px; padding-bottom:4px;
+  }
   .logo{
-    display:block; width:420px; max-width:92%; margin:0 auto 4px;
+    display:block; width:min(520px,92vw); margin:0 auto;
     animation:pulseGlow 3s infinite;
     filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
   }
@@ -35,8 +50,10 @@
     50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}
   }
 
-  /* Nav */
-  .nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:0;}
+  .nav-bar{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+    padding:8px 10px;
+  }
   .btn-neon{
     padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
     background:#111; color:var(--neon-core);
@@ -47,8 +64,7 @@
   .btn-neon:hover{background:var(--neon-core); color:#000}
   .btn-tab.active{background:var(--neon-core); color:#000}
 
-  /* Chips */
-  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:2px 0 6px}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 10px}
   .chip{
     padding:5px 10px; border:1px solid var(--neon-mid); border-radius:999px; cursor:pointer;
     color:#e9ddff; background:rgba(16,12,28,.55);
@@ -58,10 +74,10 @@
   .chip.active{border-color:#fff; color:#fff; box-shadow:0 0 16px rgba(184,108,255,.55), inset 0 0 14px rgba(184,108,255,.25)}
   .chip .count{opacity:.8; font-size:.8em}
 
-  /* Grid */
-  #grid{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; padding:0 10px 40px; margin:0}
+  main{ padding: 8px 10px 48px; }
 
-  /* Card (neon frame, image not tinted) */
+  #grid{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:0}
+
   .card{display:inline-block; text-align:center; max-width:calc(var(--card-w) + 2rem)}
   .window{
     position:relative; width:var(--card-w); height:var(--card-h);
@@ -69,13 +85,11 @@
     filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
   }
   .window img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block}
-
   .placeholder{
     width:100%; height:100%; display:grid; place-items:center;
     background:rgba(8,8,12,.55); color:#cdbbff; font-weight:700;
     text-shadow:0 0 8px rgba(167,79,255,.4); border-radius:12px;
   }
-
   .window::after{
     content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
     border:3px solid var(--neon-core);
@@ -84,7 +98,6 @@
   }
   @keyframes flicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
 
-  /* Title + … menu */
   .row-head{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px }
   .title{ font-size:.9rem; color:#e6dcff; text-shadow:0 0 8px rgba(167,79,255,.45) }
   .title a{ color:#e6dcff; text-decoration:none } .title a:hover{ text-decoration:underline }
@@ -104,49 +117,61 @@
     box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18);
     padding:6px; display:none;
   }
-  .menu.open .menu-panel{ display:block }
+  .menu.open .menu-panel{ display:block; }
   .menu-item{
     display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0;
     background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer;
   }
   .menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
+
   .chosen{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:6px}
   .chosen .cat{
     padding:3px 8px; border:1px solid rgba(184,108,255,.65); border-radius:999px; font-size:.72rem;
-    color:#f0e8ff; background:rgba(24,18,38,.55); box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16);
+    color:#f0e8ff; background:rgba(24,18,38,.55);
+    box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16);
   }
-  /* Modal */
-  .modal{position:fixed; inset:0; display:none; place-items:center; background:rgba(5,5,10,.6); z-index:50; backdrop-filter: blur(3px)}
-  .modal.open{display:grid}
-  .panel{width:min(520px,92vw); background:#110f1b; border:1px solid var(--neon-mid); border-radius:14px; padding:14px; box-shadow:0 0 24px rgba(184,108,255,.35), inset 0 0 16px rgba(184,108,255,.18); text-align:left}
-  .panel h3{margin:0 0 10px; color:#f0e8ff; text-shadow:0 0 8px rgba(184,108,255,.4)}
-  .grid-cb{display:flex; flex-wrap:wrap; gap:10px}
-  .opt{display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:12px; border:1px solid rgba(184,108,255,.5); background:#17142a; color:#eadeff; box-shadow:inset 0 0 10px rgba(184,108,255,.18)}
-  .opt input{accent-color:#b86cff; width:18px; height:18px}
-  .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:12px}
 </style>
 </head>
 <body data-section="movies">
-  <div class="top">
-    <!-- Use REMOTE logo first so it always shows; JS will swap to local if present -->
-    <img
-      class="logo"
-      src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png"
-      alt="AIDEN’S ENTERTAINMENT"
-    />
 
-    <div class="nav">
+  <!-- High-priority background image (remote first; fades in) -->
+  <img
+    id="bg"
+    class="bg"
+    fetchpriority="high"
+    decoding="async"
+    alt=""
+    src="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg"
+  />
+
+  <header id="hdr">
+    <div class="logo-wrap">
+      <!-- Remote logo first; swap to local if present -->
+      <img
+        id="logo"
+        class="logo"
+        fetchpriority="high"
+        decoding="async"
+        src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png"
+        alt="AIDEN’S ENTERTAINMENT"
+      />
+    </div>
+
+    <nav class="nav-bar">
       <a id="tabMovies" class="btn-neon btn-tab">Movies</a>
       <a id="tabTV" class="btn-neon btn-tab">TV Shows</a>
       <a id="tabPorn" class="btn-neon btn-tab">Porn</a>
       <button id="addBtn" class="btn-neon">Add Movie</button>
-    </div>
+    </nav>
 
     <div id="chips" class="chips"></div>
-  </div>
+  </header>
 
-  <div id="grid"></div>
+  <main>
+    <div id="grid"></div>
+  </main>
 
+  <!-- Category picker modal -->
   <div id="catModal" class="modal" aria-hidden="true">
     <div class="panel">
       <h3>Select categories</h3>
@@ -158,7 +183,7 @@
     </div>
   </div>
 
-  <!-- One-time seed (replace with your full list to reseed) -->
+  <!-- Seed once (replace with your full list if you want to reseed) -->
   <script id="seed-movies" type="application/json">
   [
     { "title": "28 Days Later", "link": "#", "img": null, "categories": ["horror"] },
@@ -168,8 +193,7 @@
   </script>
 
 <script>
-  /* ===== JS App (inline for testing) ===== */
-
+  /* ===== App JS ===== */
   const CATS = ['horror','thriller','fantasy','sci-fi','comedy','cartoon','porn','other'];
   const STORAGE_KEYS = { movies:'castle.movies.v10', tv:'castle.tv.v10', porn:'castle.porn.v10' };
 
@@ -295,17 +319,22 @@
     catch(e){ console.error('Seed parse failed', e); }
   }
 
-  /* Fallback: after load, try to switch to local assets if they exist */
+  /* Background & logo: show remote immediately, then swap to local if present */
   function trySwapToLocalImages(){
-    // background
+    const bg = document.getElementById('bg');
+    // fade-in when remote loads
+    if(bg.complete) bg.classList.add('show');
+    else bg.addEventListener('load', ()=>bg.classList.add('show'));
+
+    // try local bg
     const testBg = new Image();
-    testBg.onload = ()=>{ document.body.style.backgroundImage = "url('assets/castlebg.jpeg')"; };
+    testBg.onload = ()=>{ bg.src = 'assets/castlebg.jpeg'; };
     testBg.src = 'assets/castlebg.jpeg';
 
-    // logo
-    const logo = document.querySelector('.logo');
+    // try local logo
+    const logo = document.getElementById('logo');
     const testLogo = new Image();
-    testLogo.onload = ()=>{ if(logo) logo.src = 'assets/logo.png'; };
+    testLogo.onload = ()=>{ logo.src = 'assets/logo.png'; };
     testLogo.src = 'assets/logo.png';
   }
 
