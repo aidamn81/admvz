@@ -54,12 +54,17 @@ body{
   margin:0;             /* remove top margin */
   padding-top:0;        /* no padding at top */
 }
-.logo{display:block; width:420px; max-width:92%; margin:0 auto 2px; animation:pulseGlow 3s infinite;}
-@keyframes pulseGlow{
-  0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
-  50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}
+..logo{
+  display:block;
+  width:420px;
+  max-width:92%;
+  margin:0 auto 4px;    /* tiny space below logo */
+  animation:pulseGlow 3s infinite;
+  filter:
+    drop-shadow(0 0 6px var(--neon-core))
+    drop-shadow(0 0 12px var(--neon-mid))
+    drop-shadow(0 0 24px var(--neon-outer));
 }
-
 /* Top neon nav + Add button */
 .nav{display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin:0;}
 .btn-neon{
