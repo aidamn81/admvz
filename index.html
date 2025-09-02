@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Aiden’s Entertainment — Movies (Glow Castle)</title>
+<title>Aiden’s Entertainment — Movies</title>
 
 <link rel="preconnect" href="https://edef3.pcloud.com" crossorigin>
 <link rel="preconnect" href="https://edef11.pcloud.com" crossorigin>
@@ -11,169 +11,126 @@
 <style>
   :root{
     --neon-core:#d6a4ff; --neon-mid:#a74fff; --neon-outer:#7b2cff;
-    --card-w:3cm; --card-h:3cm;
-    --header-z: 1000;
+    --card-w:3cm; --card-h:3cm; --header-z: 1000;
   }
-
   html,body{height:100%;margin:0}
-  body{
-    /* neutral fallback while the photo loads */
-    background:#0b0a12;
-    font-family:'Cinzel Decorative', serif; color:#fff; overflow-x:hidden;
-  }
+  body{background:#0b0a12;font-family:'Cinzel Decorative', serif;color:#fff;overflow-x:hidden}
 
-  /* The castle photo (remote first so you always see it), then we’ll try local */
-  .bg{
-    position:fixed; inset:0; width:100%; height:100%;
-    object-fit:cover; z-index:-2; opacity:0; transition:opacity .35s ease;
-  }
-  .bg.show{ opacity:1; }
+  /* Background photo (remote first), fades in */
+  .bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:0;transition:opacity .35s ease}
+  .bg.show{opacity:1}
 
-  /* Pulsing neon glow OVER the castle image, but UNDER content */
-  .bg-glow{
-    position:fixed; inset:0; z-index:-1; pointer-events:none;
+  /* Pulsing lavender glow over the castle, under content */
+  .bg-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:
       radial-gradient(60% 30% at 50% 10%, rgba(167,79,255,.55), rgba(167,79,255,.12) 40%, transparent 70%),
       radial-gradient(45% 20% at 50% 8%, rgba(214,164,255,.45), transparent 60%);
     animation: glowPulse 4.2s ease-in-out infinite, glowFlicker 7s linear infinite;
-    mix-blend-mode: screen;  /* lets the lavenders bloom over the castle */
-  }
-  @keyframes glowPulse{
-    0%,100%{opacity:.55; filter:blur(0px)}
-    50%{opacity:.95; filter:blur(1px)}
-  }
-  @keyframes glowFlicker{
-    0%,19%,21%,23%,25%,54%,56%,100%{filter:brightness(1)}
-    20%,24%,55%{filter:brightness(1.15)}
-  }
+    mix-blend-mode: screen}
+  @keyframes glowPulse{0%,100%{opacity:.55;filter:blur(0)}50%{opacity:.95;filter:blur(1px)}}
+  @keyframes glowFlicker{0%,19%,21%,23%,25%,54%,56%,100%{filter:brightness(1)}20%,24%,55%{filter:brightness(1.15)}}
 
-  /* Sticky header: logo at the very top, menu directly below */
-  header{
-    position:sticky; top:0; z-index:var(--header-z);
-    display:flex; flex-direction:column; align-items:center;
-    backdrop-filter: blur(1.5px);
-  }
-  .logo-wrap{
-    display:flex; justify-content:center; align-items:center; width:100%;
-    padding-top:6px; padding-bottom:4px;
-  }
-  .logo{
-    display:block; width:min(520px,92vw); margin:0 auto;
-    animation:logoPulse 3s infinite;
-    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
-  }
-  @keyframes logoPulse{
-    0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
-    50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}
-  }
+  /* Header: logo at the very top, menu directly underneath */
+  header{position:sticky;top:0;z-index:var(--header-z);display:flex;flex-direction:column;align-items:center;backdrop-filter:blur(1.5px)}
+  .logo-wrap{display:flex;justify-content:center;align-items:center;width:100%;padding-top:6px;padding-bottom:4px}
+  .logo{display:block;width:min(520px,92vw);margin:0 auto;animation:logoPulse 3s infinite;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}
+  @keyframes logoPulse{0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))}50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-mid)) drop-shadow(0 0 48px var(--neon-outer))}}
 
-  .nav-bar{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; padding:8px 10px}
+  .nav-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 10px}
   .btn-neon{
-    padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
-    background:#111; color:var(--neon-core);
-    border:2px solid var(--neon-core); border-radius:12px; cursor:pointer;
+    padding:10px 16px;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+    background:#111;color:var(--neon-core);
+    border:2px solid var(--neon-core);border-radius:12px;cursor:pointer;
     box-shadow:0 0 10px var(--neon-outer), inset 0 0 10px rgba(167,79,255,.25);
-    text-decoration:none;
+    text-decoration:none
   }
-  .btn-neon:hover{background:var(--neon-core); color:#000}
-  .btn-tab.active{background:var(--neon-core); color:#000}
+  .btn-neon:hover{background:var(--neon-core);color:#000}
+  .btn-tab.active{background:var(--neon-core);color:#000}
 
-  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 10px}
   .chip{
-    padding:5px 10px; border:1px solid var(--neon-mid); border-radius:999px; cursor:pointer;
-    color:#e9ddff; background:rgba(16,12,28,.55);
-    box-shadow:inset 0 0 12px rgba(167,79,255,.25), 0 0 12px rgba(123,44,255,.18);
-    font-size:.88rem; user-select:none;
+    padding:5px 10px;border:1px solid var(--neon-mid);border-radius:999px;cursor:pointer;
+    color:#e9ddff;background:rgba(16,12,28,.55);
+    box-shadow:inset 0 0 12px rgba(167,79,255,.25),0 0 12px rgba(123,44,255,.18);
+    font-size:.88rem;user-select:none
   }
-  .chip.active{border-color:#fff; color:#fff; box-shadow:0 0 16px rgba(184,108,255,.55), inset 0 0 14px rgba(184,108,255,.25)}
-  .chip .count{opacity:.8; font-size:.8em}
+  .chip.active{border-color:#fff;color:#fff;box-shadow:0 0 16px rgba(184,108,255,.55), inset 0 0 14px rgba(184,108,255,.25)}
+  .chip .count{opacity:.8;font-size:.8em}
 
-  main{ padding: 8px 10px 48px; }
+  main{padding:8px 10px 48px}
+  #grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0}
 
-  #grid{display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:0}
-
-  .card{display:inline-block; text-align:center; max-width:calc(var(--card-w) + 2rem)}
+  .card{display:inline-block;text-align:center;max-width:calc(var(--card-w) + 2rem)}
   .window{
-    position:relative; width:var(--card-w); height:var(--card-h);
-    border-radius:12px; overflow:hidden; display:block;
-    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer));
+    position:relative;width:var(--card-w);height:var(--card-h);
+    border-radius:12px;overflow:hidden;display:block;
+    filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-mid)) drop-shadow(0 0 24px var(--neon-outer))
   }
-  .window img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block}
+  .window img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
   .placeholder{
-    width:100%; height:100%; display:grid; place-items:center;
-    background:rgba(8,8,12,.55); color:#cdbbff; font-weight:700;
-    text-shadow:0 0 8px rgba(167,79,255,.4); border-radius:12px;
+    width:100%;height:100%;display:grid;place-items:center;
+    background:rgba(8,8,12,.55);color:#cdbbff;font-weight:700;
+    text-shadow:0 0 8px rgba(167,79,255,.4);border-radius:12px
   }
   .window::after{
-    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none;
-    border:3px solid var(--neon-core);
-    box-shadow:0 0 6px 2px #c27fff, 0 0 12px 4px var(--neon-mid), 0 0 24px 6px var(--neon-outer), 0 0 48px 10px rgba(123,44,255,.6);
-    animation:frameFlicker 3s infinite;
+    content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;border:3px solid var(--neon-core);
+    box-shadow:0 0 6px 2px #c27fff,0 0 12px 4px var(--neon-mid),0 0 24px 6px var(--neon-outer),0 0 48px 10px rgba(123,44,255,.6);
+    animation:frameFlicker 3s infinite
   }
   @keyframes frameFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
 
-  .row-head{ display:flex; align-items:center; gap:8px; justify-content:center; margin-top:4px }
-  .title{ font-size:.9rem; color:#e6dcff; text-shadow:0 0 8px rgba(167,79,255,.45) }
-  .title a{ color:#e6dcff; text-decoration:none } .title a:hover{ text-decoration:underline }
+  .row-head{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:4px}
+  .title{font-size:.9rem;color:#e6dcff;text-shadow:0 0 8px rgba(167,79,255,.45)}
+  .title a{color:#e6dcff;text-decoration:none}
+  .title a:hover{text-decoration:underline}
 
-  .menu{ position:relative; display:inline-block }
+  .menu{position:relative;display:inline-block}
   .more-btn{
-    padding:2px 8px; line-height:1.2; border-radius:10px; cursor:pointer;
-    border:1px solid var(--neon-core); background:rgba(18,14,28,.7); color:var(--neon-core);
-    box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2);
-    font-weight:800;
+    padding:2px 8px;line-height:1.2;border-radius:10px;cursor:pointer;
+    border:1px solid var(--neon-core);background:rgba(18,14,28,.7);color:var(--neon-core);
+    box-shadow:0 0 6px rgba(123,44,255,.35), inset 0 0 6px rgba(123,44,255,.2);font-weight:800
   }
-  .more-btn:hover{ background:var(--neon-core); color:#000 }
+  .more-btn:hover{background:var(--neon-core);color:#000}
   .menu-panel{
-    position:absolute; left:50%; transform:translateX(-50%);
-    margin-top:6px; min-width:180px; z-index:5;
-    background:#100e1a; border:1px solid var(--neon-mid); border-radius:12px;
+    position:absolute;left:50%;transform:translateX(-50%);margin-top:6px;min-width:180px;z-index:5;background:#100e1a;
+    border:1px solid var(--neon-mid);border-radius:12px;
     box-shadow:0 0 18px rgba(184,108,255,.35), inset 0 0 12px rgba(184,108,255,.18);
-    padding:6px; display:none;
+    padding:6px;display:none
   }
-  .menu.open .menu-panel{ display:block; }
-  .menu-item{
-    display:block; width:100%; text-align:left; padding:8px 10px; margin:2px 0;
-    background:transparent; border:1px solid rgba(184,108,255,.35); border-radius:10px; color:#eedeff; cursor:pointer;
-  }
-  .menu-item:hover{ background:var(--neon-core); color:#000; border-color:var(--neon-core) }
+  .menu.open .menu-panel{display:block}
+  .menu-item{display:block;width:100%;text-align:left;padding:8px 10px;margin:2px 0;background:transparent;border:1px solid rgba(184,108,255,.35);border-radius:10px;color:#eedeff;cursor:pointer}
+  .menu-item:hover{background:var(--neon-core);color:#000;border-color:var(--neon-core)}
 
-  .chosen{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:6px}
+  .chosen{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
   .chosen .cat{
-    padding:3px 8px; border:1px solid rgba(184,108,255,.65); border-radius:999px; font-size:.72rem;
-    color:#f0e8ff; background:rgba(24,18,38,.55);
-    box-shadow:inset 0 0 8px rgba(167,79,255,.22), 0 0 8px rgba(123,44,255,.16);
+    padding:3px 8px;border:1px solid rgba(184,108,255,.65);border-radius:999px;font-size:.72rem;color:#f0e8ff;background:rgba(24,18,38,.55);
+    box-shadow:inset 0 0 8px rgba(167,79,255,.22),0 0 8px rgba(123,44,255,.16)
   }
+
+  /* Minimal modal for category checkboxes */
+  .modal{position:fixed;inset:0;background:rgba(8,6,14,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:2000}
+  .modal.open{display:flex}
+  .panel{background:#0e0c18;border:1px solid var(--neon-mid);border-radius:14px;box-shadow:0 0 24px rgba(184,108,255,.35);padding:14px 16px;width:min(520px,92vw)}
+  .grid-cb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+  .opt{display:flex;align-items:center;gap:8px}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px}
 </style>
 </head>
 <body data-section="movies">
 
-  <!-- Castle image (remote first), fades in -->
-  <img
-    id="bg"
-    class="bg"
-    fetchpriority="high"
-    decoding="async"
-    alt=""
-    src="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=6"
-  />
-  <!-- The pulsing lavender glow layer -->
+  <!-- Background (remote first), then try local assets if available -->
+  <img id="bg" class="bg" fetchpriority="high" decoding="async"
+       src="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=20" alt="" />
   <div class="bg-glow" aria-hidden="true"></div>
 
   <header>
     <div class="logo-wrap">
-      <!-- Logo at the very top -->
-      <img
-        id="logo"
-        class="logo"
-        fetchpriority="high"
-        decoding="async"
-        src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=6"
-        alt="AIDEN’S ENTERTAINMENT"
-      />
+      <img id="logo" class="logo" fetchpriority="high" decoding="async"
+           src="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=20"
+           alt="AIDEN’S ENTERTAINMENT" />
     </div>
 
-    <!-- Menu directly under the logo -->
     <nav class="nav-bar">
       <a id="tabMovies" class="btn-neon btn-tab">Movies</a>
       <a id="tabTV" class="btn-neon btn-tab">TV Shows</a>
@@ -181,7 +138,6 @@
       <button id="addBtn" class="btn-neon">Add Movie</button>
     </nav>
 
-    <!-- Category chips -->
     <div id="chips" class="chips"></div>
   </header>
 
@@ -201,94 +157,488 @@
     </div>
   </div>
 
-  <!-- One-time seed (replace with your full list to reseed) -->
-  <script id="seed-movies" type="application/json">
-  [
-    { "title": "28 Days Later", "link": "#", "img": null, "categories": ["horror"] },
-    { "title": "Addams Family", "link": "#", "img": null, "categories": ["fantasy","comedy"] },
-    { "title": "Interstellar", "link": "#", "img": null, "categories": ["sci-fi"] }
-  ]
+  <!-- Your RAW pasted list lives here. It’s parsed on first load and stored. -->
+  <script id="seed-raw" type="text/plain">
+28 days later- https://dobby.site/movies/28-days-later-dot-dot-dot-2002?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+thumbnail: https://edef10.pcloud.com/DLZ8ofLtEZO8STuB7ZWjPfZ7ZEPF3VkZNVZZnHXZZ7vkZW4ZL8Z7QZuM5Jl6HpFQ7GLL1oVDQIvSgbASH7/28days.jpg
+
+28 weeks later- https://dobby.site/movies/28-weeks-later-2007?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+thumbnail: https://edef9.pcloud.com/DLZ4d3hUEZf04gnB7ZWjPfZ7ZtxF3VkZNVZZnHXZZAgRZIHZmkZ50ZSB8SqHieakfjmrJBoUO9uHE2ODOy/28weeks.jpg
+
+30 days of night- https://dobby.site/movies/30-days-of-night-2007?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+thumbnail: https://edef4.pcloud.com/DLZAl3hUEZ6V4gnB7ZWjPfZ7ZzwF3VkZNVZZnHXZZ1PgZRzZtJZDHZ9zNE2RdJhbYhPCaUePALeL5pLGUy/30days.jpg
+
+Addams Family: https://dobby.site/movies/the-addams-family-1991?pl=-1&_u=hchh6mwu5k&_t=33dp8k&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZyq3hUEZup4gnB7ZWjPfZ7ZPoF3VkZNVZZnHXZZmlsZwHZK4Z25Z5Nh4IsQk7CuAdLw9R62bzjyIrHLk/addams.jpg
+
+Addams Family values: https://dobby.site/movies/addams-family-values-1993?_rsrc=chrome/newtab&_t=33dp8k&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZGO3hUEZQh4gnB7ZWjPfZ7ZYyp3VkZNVZZnHXZZIPh7Z1RZPpZ1XZF94gu8JfLS7FtC17Bkie54GHYoKk/addams2.jpg
+
+A simple favour: https://dobby.site/movies/a-simple-favor-2018?_rsrc=chrome/newtab&_t=7gl997&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef5.pcloud.com/DLZol3hUEZiV4gnB7ZWjPfZ7ZF7p3VkZNVZZnHXZZG85Z1FZ9XZiLZiSaI2OvWbG0YnuSbturu0FSxG8Ey/simplefavour.jpg
+
+Artificial Intelligence: https://dobby.site/movies/ai-artificial-intelligence-2001?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef6.pcloud.com/DLZ5t3hUEZlJ4gnB7ZWjPfZ7Zlyp3VkZNVZZnHXZZfq27Z55ZkkZNRZcdpXzu4TWdhJ9ijXGwsFERAvncSX/ai.jpg
+
+Alien- https://dobby.site/movies/alien-1979?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZl63hUEZ444gnB7ZWjPfZ7Z97p3VkZNVZZnHXZZtgwZxHZuHZRpZNEpKfieYG9HYNKcj8Nm2cXbcdjwk/alien.jpg
+
+Alien Romulus- https://dobby.site/movies/alien-romulus-2024?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef6.pcloud.com/DLZ0I3hUEZcS4gnB7ZWjPfZ7ZfXp3VkZNVZZnHXZZKDB7ZQFZCHZeHZ5sBYcqD7kt4kOO7k4uh8rk0d6BV7/romulus.jpg
+
+Aliens- https://dobby.site/movies/aliens-1986?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZ9N3hUEZa24gnB7ZWjPfZ7Zkkp3VkZNVZZnHXZZhcFVZY0Zy5ZdFZyNwGKXOMRQ4aR3JkUXan0XzPisaX/aliens.jpg
+
+Alien 3 - https://dobby.site/movies/alien3-1992?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZjO3hUEZuQ4gnB7ZWjPfZ7ZN7p3VkZNVZZnHXZZ5vMZfzZDFZ8RZFhwPmQRVys4BlXAuViSBhRk8dtek/alien3.jpg
+
+Alien 4- https://dobby.site/movies/alien-resurrection-1997?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZuE3hUEZiR4gnB7ZWjPfZ7ZGkp3VkZNVZZnHXZZHHFZMLZHLZ3XZkM0QMSdR2hzfYc2us8Ycr4Iz1N2V/alien4.jpg
+
+Angels in America: https://dobby.site/shows/angels-in-america?_u=hchh6mwu5k&_t=e14tdp&_rsrc=chrome/newtab
+Thumbnail: https://edef1.pcloud.com/DLZcA3hUEZoB4gnB7ZWjPfZ7ZFVp3VkZNVZZnHXZZ8s67ZEJZhHZXHZmzVn3YCBUymIAVCbazbG7FKhIOOV/angels.jpg
+
+Batman- https://dobby.site/movies/batman-1989?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef12.pcloud.com/DLZbI3hUEZRj4gnB7ZWjPfZ7Zq0p3VkZNVZZnHXZZQJYZzzZLzZpFZHt4MrrsB8gj5l8Y2z0DIe5MYTrFX/batman.jpg
+
+Batman returns- https://dobby.site/movies/batman-returns-1992?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZ6a3hUEZ6s4gnB7ZWjPfZ7ZR5p3VkZNVZZnHXZZoNk7ZgJZDHZn5Zz6jijvALWjmv6s7U4tw6yfSWq9rX/batman2.jpg
+
+Batman Forever - https://dobby.site/movies/batman-returns-1992?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZlN3hUEZuW4gnB7ZWjPfZ7Zq5p3VkZNVZZnHXZZc4aZ6FZ45ZDLZFCx0vO2830unIOxIqI3Y4mwhx7xV/batmanforever.jpg
+
+The Batman - https://dobby.site/movies/the-batman-2022?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef1.pcloud.com/DLZXN3hUEZGB4gnB7ZWjPfZ7ZRJp3VkZNVZZnHXZZTbzZeLZhJZr0ZasMfyfU0Iszwt8P86PICjhnXgETk/thebatman.jpg
+
+Barb and Star: https://dobby.site/movies/barb-and-star-go-to-vista-del-mar-2021?_rsrc=chrome/newtab&_t=gcqrcb&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZja3hUEZGs4gnB7ZWjPfZ7ZmVp3VkZNVZZnHXZZTy4ZkHZbFZJRZOUoK1gAYg3zuiga6E9HaPbcD8UoV/barb.jpg
+
+Becky: https://dobby.site/movies/becky-2020?_rsrc=chrome/newtab&_t=h5aqtn&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef3.pcloud.com/DLZK33hUEZ7e4gnB7ZWjPfZ7ZCJp3VkZNVZZnHXZZFMbZfJZCFZ3XZTCFH4OqTEe0mykQEBAPiqQC1OjNX/becky.jpg
+
+The wrath of Becky: https://dobby.site/movies/the-wrath-of-becky-2023?pl=-1&_u=hchh6mwu5k&_t=h5aqtn&_rsrc=chrome/newtab
+Thumbnail: https://edef11.pcloud.com/DLZQi3hUEZ4g4gnB7ZWjPfZ7ZrJp3VkZNVZZnHXZZKqMZapZo5ZqLZSkLMrWKXRfFAThY4OHFfpXEVobak/becky2.jpg
+
+Black swan: https://dobby.site/list/Watch%20Later/55?_rsrc=chrome/newtab&_t=2tq1n7&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef1.pcloud.com/DLZ6c3hUEZBt4gnB7ZWjPfZ7ZjFp3VkZNVZZnHXZZcII5ZM0ZQJZ7JZoLjtGhliwmVVFKhcVYaKYbQztTAy/blackswan.jpg
+
+Chocolat: https://dobby.site/movies/chocolat-2000?pl=-1&_u=hchh6mwu5k&_t=n8hvit&_rsrc=chrome/newtab
+Thumbnail:https://edef3.pcloud.com/DLZ0c3hUEZLK4gnB7ZWjPfZ7ZfHp3VkZNVZZnHXZZ4kxZzJZ5HZg7Z1BMtOtUPPjk5IwDPM24kyuy4o4pk/chocolat.jpg
+
+Coyote ugly: https://dobby.site/movies/coyote-ugly-2000?pl=-1&_u=hchh6mwu5k&_t=n8hvit&_rsrc=chrome/newtab
+Thumbnail: https://edef5.pcloud.com/DLZkr3hUEZkx4gnB7ZWjPfZ7ZJzp3VkZNVZZnHXZZj8FZMzZ2HZJXZlQ8mkl6u4tuP2qnDd47AURe59UhV/coyote.jpg
+
+Clueless: https://dobby.site/movies/clueless-1995?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef5.pcloud.com/DLZaXGhUEZiN4gnB7ZWjPfZ7Znzp3VkZNVZZnHXZZJsm7Z4JZiHZJFZrURMR7Qo46FVAqw5lJd0WhGaj43k/clueless.jpg
+
+Crawl: https://dobby.site/movies/crawl-2019?pl=-1&_u=hchh6mwu5k&_t=qgkarn&_rsrc=chrome/newtab
+Thumbnail: https://edef6.pcloud.com/DLZJo3hUEZYd4gnB7ZWjPfZ7ZNzp3VkZNVZZnHXZZcrKZXFZG5ZhRZlTyjpUrWdP5T9DDsOhfwxR5BjmnX/crawl.jpg
+
+Cruel Intentions: https://dobby.site/list/Watch%20Later/26?_rsrc=chrome/newtab&_t=4ar4fj&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef2.pcloud.com/DLZBo3hUEZPl4gnB7ZWjPfZ7ZHRp3VkZNVZZnHXZZH9BZXkZwXZSJZyHnEFyQyFEBQw0AKkEfamYaBeUu7/cruel.jpg
+
+Dark city: https://dobby.site/list/Watch%20Later/27?_rsrc=chrome/newtab&_t=fse6bl&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef2.pcloud.com/DLZfyGhUEZxt4gnB7ZWjPfZ7Z9Rp3VkZNVZZnHXZZh0X7ZLRZY5ZxFZ8g0tCHLLzRQRot4oouOorpqJwLCy/darkcity.jpg
+
+Dawn of the dead: https://dobby.site/movies/dawn-of-the-dead-2004?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef8.pcloud.com/DLZByGhUEZ8t4gnB7ZWjPfZ7ZARp3VkZNVZZnHXZZLuLZhHZ0pZ25Zid3vYYCHkNQ7SX3AGufzHLuSIXFX/dawn.jpg
+
+Dennis the meanice: https://dobby.site/movies/dennis-the-menace-1993?_rsrc=chrome/newtab&_t=atjrk6&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef8.pcloud.com/DLZd7GhUEZ4O4gnB7ZWjPfZ7ZvLp3VkZNVZZnHXZZqh9Z75Z7RZa5ZKTymcM1XrHFiqXluwnmmD8eENKYX/dennis.jpg
+
+Dogma: https://dobby.site/movies/dogma-1999?_rsrc=chrome/newtab&_t=kba74h&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZEkGhUEZDI4gnB7ZWjPfZ7Zm4p3VkZNVZZnHXZZHlQ7ZrVZRXZQzZ5OuzW333gxRFGuVK4k1iV7E0k6d7/dogma.jpg
+
+Don’t breathe: https://dobby.site/movies/dont-breathe-2016?pl=-1&_u=hchh6mwu5k&_t=kba74h&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZBJGhUEZdo4gnB7ZWjPfZ7ZP4p3VkZNVZZnHXZZaKakZm5ZULZ3RZ4I1z6PWBtYzHPuoKBl1fqBnnACDV/dontbreathe.jpg
+
+Don’t breathe 2: https://dobby.site/movies/dont-breathe-2-2021?pl=-1&_u=hchh6mwu5k&_t=3mg952&_rsrc=chrome/newtab
+Thumbnail: https://edef5.pcloud.com/DLZR5GhUEZkr4gnB7ZWjPfZ7Zo4p3VkZNVZZnHXZZMNHkZ2HZdRZ80ZoEQ01rk4OuJd1D8B6v1K7RfwodnX/dontbreathe2.jpg
+
+Dracula: https://dobby.site/movies/dracula-1992?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZP5GhUEZRk8gnB7ZWjPfZ7ZY8p3VkZNVZZnHXZZSYT7ZJRZc5ZmkZQo5pb8Mpvib5wHEIwvHmDz93rSTV/dracula.jpg
+
+Edward Scissorhands: https://dobby.site/movies/edward-scissorhands-1990?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef12.pcloud.com/DLZ9VGhUEZfN4gnB7ZWjPfZ7Zg8p3VkZNVZZnHXZZDX4ZnRZCLZu5Z4i8McucspaYn8C97rM4xjhqU12I7/edward.jpg
+
+Elvis: https://dobby.site/movies/elvis-2022?_rsrc=chrome/newtab&_t=oo4prj&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef12.pcloud.com/DLZ30GhUEZTy8gnB7ZWjPfZ7Zv8p3VkZNVZZnHXZZmWmZa5ZaHZSRZfH7krqydt2fxRBFmc7w0zjXmU9Qy/elvis.jpg
+
+Fight club: https://dobby.site/movies/fight-club-1999?pl=-1&_u=hchh6mwu5k&_t=n8hvit&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZe5GhUEZKr4gnB7ZWjPfZ7ZLQp3VkZNVZZnHXZZNbPZx0ZDVZapZVMVlnsuMfQBCFJ1d9FW1nzvaj85k/fight.jpg
+
+Ghost: https://dobby.site/movies/ghost-1990?_rsrc=chrome/newtab&_t=aed2ap&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZ65GhUEZNr4gnB7ZWjPfZ7ZmYp3VkZNVZZnHXZZauLZBJZGHZgkZxRCK9BptFfzm0wGvT2vJYFbLDDDX/ghost.jpg
+
+Ginger snaps: https://dobby.site/movies/ghost-1990?_rsrc=chrome/newtab&_t=aed2ap&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZjzGhUEZXY8gnB7ZWjPfZ7ZdYp3VkZNVZZnHXZZwbAZXFZdHZHFZO2wuMRv3uaX4FUDGn8bMDkUqUWey/ginger.jpg
+
+Ginger snaps 2: https://www.effedupmovies.com/ginger-snaps-2-2004/
+Thumbnail: https://edef12.pcloud.com/DLZ2pGhUEZck8gnB7ZWjPfZ7ZJmp3VkZNVZZnHXZZN0OZBHZfLZX0Z3W4Ds4PlwMjyGGVzaEqThFbPpcJ7/ginger2.jpg
+
+Ginger snaps 3: https://www.lookmovie2.to/movies/view/ginger-snaps-back-the-beginning-2004
+Thumbnail: https://edef6.pcloud.com/DLZPLGhUEZHz8gnB7ZWjPfZ7Znmp3VkZNVZZnHXZZ9jt7ZcHZiLZQXZLTy04CUo1c0cz7v2Olyv0FYtqH6V/ginger3.jpg
+
+Great expectations: https://dobby.site/movies/great-expectations-1998?pl=-1&_u=hchh6mwu5k&_t=7jq6kp&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZGHGhUEZLR8gnB7ZWjPfZ7Z8bp3VkZNVZZnHXZZedF7Zy5ZLpZkJZrYtpVTHBeOhHYfYS8HxJwYUVg23y/expectations.jpg
+
+Hail Satan: https://dobby.site/list/Watch%20Later/37?_rsrc=chrome/newtab&_t=lhbiio&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef12.pcloud.com/DLZ4zGhUEZxQ8gnB7ZWjPfZ7Zlbp3VkZNVZZnHXZZG0eZi5ZQFZfJZhNQrkKMrIWuuWjomN5ANpYn1x8NX/hail.jpg
+
+Hewing and the angry inch: https://dobby.site/movies/hedwig-and-the-angry-inch-2001?_rsrc=chrome/newtab&_t=7r6j4e&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef2.pcloud.com/DLZCzGhUEZv48gnB7ZWjPfZ7Zkhp3VkZNVZZnHXZZwe4ZDHZy5Z3HZz2WuXTQ35gyjxbbNmnn6Qycnt7KV/hedwig.jpg
+
+From Dusk till Dawn: https://dobby.site/movies/from-dusk-till-dawn-1996?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZsRGhUEZHp8gnB7ZWjPfZ7Zuhp3VkZNVZZnHXZZbYGZ1RZXXZbJZnrgwjQRqbDVkupchPHX9yLqzMrGV/fromdusk.jpg
+
+From Dusk Till Dawn: The hangman’s daughter- https://dobby.site/movies/from-dusk-till-dawn-3-the-hangmans-daughter-1999?pl=-1&_t=mr9gmc&_rsrc=chrome/newtab&_u=hchh6mwu5k
+Thumbnail: https://edef2.pcloud.com/DLZG4GhUEZnQ8gnB7ZWjPfZ7ZNSp3VkZNVZZnHXZZxLLZMLZy5ZcJZapYAGCUYtnhuWww1cns4VFbXB45X/fromdusk3.jpg
+
+I know what you did last summer: https://dobby.site/movies/i-know-what-you-did-last-summer-1997?_rsrc=chrome/newtab&_t=badn4n&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef2.pcloud.com/DLZe8GhUEZnf8gnB7ZWjPfZ7Zpjp3VkZNVZZnHXZZxi5ZsRZqHZbJZ0Jc4Qj05XxupC1zTYdS9bk6cH9OV/iknow.jpg
+
+I still know what you did last summer: https://dobby.site/movies/i-still-know-what-you-did-last-summer-1998?pl=-1&_u=hchh6mwu5k&_t=472cu6&_rsrc=chrome/newtab
+Thumbnail: https://edef11.pcloud.com/DLZ38GhUEZsm8gnB7ZWjPfZ7Z2jp3VkZNVZZnHXZZbizZA8ZbRZrFZm2Bmw8k2aI7h1YsiFtnxazNNdzEX/iknow2.jpg
+
+Interview with the vampire: https://dobby.site/movies/interview-with-the-vampire-1994?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZeQGhUEZ3m8gnB7ZWjPfZ7Zajp3VkZNVZZnHXZZ7gVZ15ZYkZOZ5hWEu3suKKknWfj4bgyxEQOqBkkk/interview.jpg
+
+Jolt: https://dobby.site/movies/jolt-2021?_rsrc=chrome/newtab&_t=1oaoul&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef3.pcloud.com/DLZdSGhUEZ5D8gnB7ZWjPfZ7Zzup3VkZNVZZnHXZZ1CxZg4Zw0ZYVZu5esoT68U8FBER5JDYY0hkPh7MiV/jolt.jpg
+
+Jurassic park: https://dobby.site/movies/jurassic-park-1993?_rsrc=chrome/newtab&_t=rvhrmk&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef4.pcloud.com/DLZxhGhUEZuD8gnB7ZWjPfZ7ZWup3VkZNVZZnHXZZ4NtZHpZQzZuFZfHaCGrUGQCB6MwNbBR14M7j6jVB7/jp.jpg
+
+Let me in: https://dobby.site/movies/let-me-in-2010?pl=-1&_u=hchh6mwu5k&_t=7jq6kp&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZ0bGhUEZku8gnB7ZWjPfZ7Ztup3VkZNVZZnHXZZq9XZNzZE0ZbHZu1lGUyAydPYajKyDL3rKCkhmfh7k/letmein.jpg
+
+Life after Beth: https://dobby.site/list/Watch%20Later/17?_rsrc=chrome/newtab&_t=d81d2t&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef4.pcloud.com/DLZ8bGhUEZUu8gnB7ZWjPfZ7Ztpp3VkZNVZZnHXZZga0Zf4Z8LZipZ6IpkFX8FEguvNbD5pjo5c4OWeQlX/beth.jpg
+
+Lisa Frankenstein: https://dobby.site/movies/lisa-frankenstein-2024?_rsrc=chrome/newtab&_t=cpdupp&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef9.pcloud.com/DLZUbGhUEZ8B8gnB7ZWjPfZ7Zkfp3VkZNVZZnHXZZeC2ZuLZqRZGzZ6YDuu1uSOEXayOV7LfSfgQt2IPMk/lisa.jpg
+
+Mary Shelley’s Frankenstein: https://dobby.site/list/Watch%20Later/77?pl=-1&_u=hchh6mwu5k&_t=cpdupp&_rsrc=chrome/newtab
+Thumbnail: https://edef11.pcloud.com/DLZ0SGhUEZyg8gnB7ZWjPfZ7Z2fp3VkZNVZZnHXZZ8X0ZfRZl7ZoHZhax3XpfQCyLdTgEvWlykL8yxcE4X/frankeinstein.jpg
+
+Moulin Rouge: https://dobby.site/movies/moulin-rouge-2001?pl=-1&_u=hchh6mwu5k&_t=oo4prj&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZvSGhUEZJ18gnB7ZWjPfZ7Zd2p3VkZNVZZnHXZZ80CZ84Z3XZoHZi9srfwr8hkB8DyaEhcVGfRJJ3JxV/moulin.jpg
+
+Mrs Doubtfire: https://dobby.site/movies/mrs-doubtfire-1993?_rsrc=chrome/newtab&_t=8t6qkg&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef8.pcloud.com/DLZ6jGhUEZ2e8gnB7ZWjPfZ7ZVWp3VkZNVZZnHXZZcK2Z0pZJHZX0ZK71bXexsljbIfk6gm2rnvJH8aOe7/doubtfire.jpg
+
+Muse: Simulation theory: https://dobby.site/list/Watch%20Later/3?_u=hchh6mwu5k&_t=31f1bb&_rsrc=chrome/newtab
+Thumbnail: https://edef7.pcloud.com/DLZ0uGhUEZCn8gnB7ZWjPfZ7ZjWp3VkZNVZZnHXZZHJm7ZvRZSJZuFZyLeMgsJbG7J3dNNtbUBsUzsOHYxV/muse.jpg
+
+Natural born killers: https://dobby.site/movies/natural-born-killers-1994?_rsrc=chrome/newtab&_t=n6iepe&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef11.pcloud.com/DLZifGhUEZfg8gnB7ZWjPfZ7ZwWp3VkZNVZZnHXZZuxOZKJZeJZ7VZxp37z29XG1HFgGgLhHPEVjpwWPKk/naturalbornkillers.jpg
+
+No one will save you: https://dobby.site/movies/no-one-will-save-you-2023?pl=-1&_u=hchh6mwu5k&_t=qgkarn&_rsrc=chrome/newtab
+Thumbnail:https://edef6.pcloud.com/DLZQWGhUEZ4K8gnB7ZWjPfZ7Zysp3VkZNVZZnHXZZyWM7ZtLZfHZ2pZ5pgkhrS9dbXgPbCcVQj4xYOXSlby/noone.jpg
+
+Old people: https://dobby.site/movies/old-people-2022?_u=hchh6mwu5k&_t=qgkarn&_rsrc=chrome/newtab
+Thumbnail: https://edef8.pcloud.com/DLZ6fGhUEZ8P8gnB7ZWjPfZ7ZSsp3VkZNVZZnHXZZw8gZqpZcJZLJZlaHHy0rnJfj3NVUN9riYN7fXDdLy/oldpeople.jpg
+
+Only lovers left alive: https://dobby.site/movies/only-lovers-left-alive-2013?pl=-1&_u=hchh6mwu5k&_t=muet4h&_rsrc=chrome/newtab
+Thumbnail: https://edef11.pcloud.com/DLZTBGhUEZPg8gnB7ZWjPfZ7Z6sp3VkZNVZZnHXZZ6uBZWFZR5Z7VZSSeFBrc8eURBs5ByQMXVIV5O64vV/lovers.jpg
+
+Open house: https://dobby.site/movies/the-open-house-2018?_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZSBGhUEZgT8gnB7ZWjPfZ7ZJDp3VkZNVZZnHXZZ4M4ZiVZqFZHVZ2NmEytjWjojHJ1mHcdbBlf2Ij9I7/openhouse.jpg
+
+Pans labyrinth hun: https://videa.hu/videok/film-animacio/a-faun-labirintusa-2006-fantasztikus-mexikoi-spanyol-amerikai-u5Gi4DbSGJeU1MmA
+Thumbnail: https://edef11.pcloud.com/DLZYWGhUEZKx8gnB7ZWjPfZ7ZaDp3VkZNVZZnHXZZyySZCLZ25ZjLZ5xLgqnM5YMYe21iC1t8r0HJ09LpV/pans.jpg
+
+Paris is burning: https://youtu.be/nI7EhpY2yaA?si=MayNBLHYYmjgSc90
+Thumbnail: https://edef3.pcloud.com/DLZiWGhUEZ8d8gnB7ZWjPfZ7ZF1p3VkZNVZZnHXZZq6RZ60ZQFZfpZoDbYPfiSR1SeMovNVgIAubF6yvKX/paris.jpg
+
+Passengers: https://dobby.site/movies/passengers-2016?_rsrc=chrome/newtab&_t=9gvj71&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef2.pcloud.com/DLZYsGhUEZnd8gnB7ZWjPfZ7ZW1p3VkZNVZZnHXZZNrWZMHZBRZsJZkqWS9cYG5ofK2oMHrNDsMzW8Wv9V/passangers.jpg
+
+Perfume: https://dobby.site/movies/perfume-the-story-of-a-murderer-2006?pl=-1&_u=hchh6mwu5k&_t=3mg952&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZvWGhUEZGK8gnB7ZWjPfZ7Zd1p3VkZNVZZnHXZZ93JZxzZlpZiLZUYbHJgLtFEBb3A1rxwnwPYnumUDX/perfume.jpg
+
+Poor things: https://dobby.site/movies/poor-things-2023?_rsrc=chrome/newtab&_t=r1f1a0&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef8.pcloud.com/DLZpDGhUEZaq8gnB7ZWjPfZ7Z7ep3VkZNVZZnHXZZhWmZU0ZlJZ25Z6AEdny4OdIjYjBaSM4LcVbexUKzk/poorthings.jpg
+
+Practical magic: https://dobby.site/movies/practical-magic-1998?_rsrc=chrome/newtab&_t=i0ndab&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef8.pcloud.com/DLZhMGhUEZbG8gnB7ZWjPfZ7Zjep3VkZNVZZnHXZZ1TqZppZ6zZAXZ5PJ5lnt7fIpYP8QJn2GoSVgR7DYk/practical.jpg
+
+Pretty Woman: https://dobby.site/movies/pretty-woman-1990?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef2.pcloud.com/DLZ0MGhUEZ738gnB7ZWjPfZ7Zwep3VkZNVZZnHXZZnS37Z80ZNRZeVZYh1FtBkiCW71UQG61Q5TtmUc8507/prettywoman.jpg
+
+PS burn this letter: https://dobby.site/list/Watch%20Later/23?pl=-1&_u=hchh6mwu5k&_t=31f1bb&_rsrc=chrome/newtab
+Thumbnail: https://edef11.pcloud.com/DLZT1GhUEZtE8gnB7ZWjPfZ7Zrep3VkZNVZZnHXZZym4Z4LZdkZ9FZ1ToLQG4itiLaez3INQtqij7kp01V/ps.jpg
+
+Romeo and Juliet: https://dobby.site/movies/romeo-plus-juliet-1996?pl=-1&_u=hchh6mwu5k&_t=oo4prj&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZBnGhUEZBN8gnB7ZWjPfZ7Z6np3VkZNVZZnHXZZLBQZmJZyQZipZiCCD2I3KCHkJxvTBBjPf541dNHmk/romeo.jpg
+
+Romy and Michelle: https://dobby.site/movies/romy-and-micheles-high-school-reunion-1997?_rsrc=chrome/newtab&_t=6elmfm&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef1.pcloud.com/DLZnMGhUEZxv8gnB7ZWjPfZ7ZX9p3VkZNVZZnHXZZgaxZT0Z97ZO7Z1ynoRaVncqYr2kk9djBp2HFyaFJX/romy.jpg
+
+Queen of the damned: https://dobby.site/movies/queen-of-the-damned-2002?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef6.pcloud.com/DLZPYGhUEZgb8gnB7ZWjPfZ7Ze9p3VkZNVZZnHXZZ7meZGzZsJZw4Zq1Hl9bfW9vXhPu2QOa5psyLRkLdk/qotd.jpg
+
+Sin city: https://dobby.site/list/Watch%20Later/49?_rsrc=chrome/newtab&_t=60t0c8&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef6.pcloud.com/DLZ4eGhUEZeI8gnB7ZWjPfZ7ZI9p3VkZNVZZnHXZZ3rgZvzZVpZ6XZEk6O13FWsCS6OOKMvO4eRp973ERX/sin.jpg
+
+Sin city A dame to kill: https://dobby.site/list/Watch%20Later/51?pl=-1&_u=hchh6mwu5k&_t=31f1bb&_rsrc=chrome/newtab
+Thumbnail: https://edef12.pcloud.com/DLZHxGhUEZeJQgnB7ZWjPfZ7ZFMp3VkZNVZZnHXZZoea7Z9zZhkZzRZVjdWNXAXOU0ImKaYEhK0WFQUwEsX/sin2.jpg
+
+Sister act:
+https://dobby.site/movies/sister-act-1992?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef1.pcloud.com/DLZmJADUEZua6GnB7ZWjPfZ7ZCPp3VkZNVZZnHXZZ9dFZbJZfFZyLZ3U8n4uznPM7spjif1tWAMHdIb7OV/sister1.jpg
+
+Sister act 2:
+https://dobby.site/movies/sister-act-2-back-in-the-habit-1993?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef8.pcloud.com/DLZqJADUEZM36GnB7ZWjPfZ7Z4Pp3VkZNVZZnHXZZeLpZrRZU0ZJ4ZQ75PGN1duFbBdHKGp07q7zhVt65V/sister2.jpeg
+
+Sweeney Todd: https://dobby.site/movies/sweeney-todd-the-demon-barber-of-fleet-street-2007?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZ8CGhUEZukQgnB7ZWjPfZ7ZyCp3VkZNVZZnHXZZc3OZMJZfJZj4ZvPfIWjasDThwnjwi4Wlp9VLlVq47/sweeney.jpg
+
+The best exotic Marigold hotel:
+https://dobby.site/movies/the-best-exotic-marigold-hotel-2011?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef2.pcloud.com/DLZnOu1UEZsHkinB7ZWjPfZ7ZDlp3VkZNVZZnHXZZ4eMZDLZ5LZxzZYgQ5zVSoAcXM9mAC0k1zQpivu1vy/marigold.jpeg
+
+The second best exotic Marigold hotel:
+https://dobby.site/movies/the-second-best-exotic-marigold-hotel-2015?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZ5Uu1UEZn4kinB7ZWjPfZ7Ztlp3VkZNVZZnHXZZChq7Zg4ZzVZKHZmFhVquT0iUHc33lGQL2IVuBzMy2V/marigold2.jpg
+
+The cell: https://dobby.site/movies/the-cell-2000?pl=-1&_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZUxGhUEZwJQgnB7ZWjPfZ7Z5dp3VkZNVZZnHXZZ0MR7Z2HZ7HZXFZKryHXKwRuYLRnL8fmx4XTztKd0sy/cell.jpg
+
+The craft:
+https://dobby.site/movies/the-craft-1996?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef7.pcloud.com/DLZkEc1UEZBBYrnB7ZWjPfZ7ZuEp3VkZNVZZnHXZZpCA0ZvLZrHZJ0ZrSqCRriBTnJrRHuMvK4mu8jawX6V/craft.jpeg
+
+The craft legacy:
+https://dobby.site/movies/the-craft-legacy-2020?_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZ4tc1UEZ3hYrnB7ZWjPfZ7Zl6p3VkZ3VZZnHXZZSvl7ZFFZTRZaHZinCDrph6hFBrjbL5xeRhSRAVtiVV/craft.png
+
+The crow:
+https://dobby.site/movies/the-crow-1994?_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef5.pcloud.com/DLZKhIeUEZ85XonB7ZWjPfZ7ZL3p3VkZNVZZnHXZZyvQZizZMJZz8ZuNXFSYY3THpIEOyl7PiEzVQ1cC3y/thecrow.jpg
+
+The crow city of angels: https://www.lookmovie2.to/movies/play/1689756707-the-crow-city-of-angels-1996
+Thumbnail: https://edef1.pcloud.com/DLZmuIeUEZAYXonB7ZWjPfZ7Zn3p3VkZNVZZnHXZZzt8ZD4ZHpZbzZGTUW4PUaKcfsHlL0tuVEEuUquh2V/thecrow2.jpeg
+
+The crow salvation:
+https://www.lookmovie27.to/movies/view/0132910-the-crow-salvation-2000
+Thumbnail: https://edef4.pcloud.com/DLZkuIeUEZ38XonB7ZWjPfZ7ZXGp3VkZNVZZnHXZZmD8ZcFZDzZupZ36xDvlRQbVLJMtm9RPGKnLMXNtTX/thecrow3.jpg
+
+The House bunny: https://dobby.site/movies/the-house-bunny-2008?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZSwGhUEZYpQgnB7ZWjPfZ7ZgGp3VkZNVZZnHXZZfA2kZrHZSHZSzZ4WvsjLeG7KH7raxHG3rGCbDhE3Yk/bunny.jpg
+
+The little mermaid: https://dobby.site/movies/the-little-mermaid-1989?_rsrc=chrome/newtab&_t=ev4ijt&_u=hchh6mwu5k&pl=-1
+Thumbnail:
+
+The lost boys: https://dobby.site/movies/the-lost-boys-1987?pl=-1&_u=hchh6mwu5k&_t=muet4h&_rsrc=chrome/newtab
+Thumbnail: https://edef1.pcloud.com/DLZoCGhUEZgVQgnB7ZWjPfZ7Z7vp3VkZNVZZnHXZZV2NZQ8ZzHZ1JZOJFKMg44FISsTRj5rKSJNybUXkmV/mermaid.jpg
+
+The cell: https://dobby.site/movies/the-cell-2000?pl=-1&_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef10.pcloud.com/DLZUxGhUEZwJQgnB7ZWjPfZ7ZBvp3VkZNVZZnHXZZ0MR7Z7HZXFZ2HZV16GnNUWn675YzrXjPiiVkq9s2TX/cell.jpg
+
+The others: https://dobby.site/movies/the-others-2001?pl=-1&_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef6.pcloud.com/DLZBwGhUEZtpQgnB7ZWjPfZ7ZNvp3VkZNVZZnHXZZQx9ZNzZPVZp0ZUwJbqcBLTEVpR3sYnG5Ir8DNmXqy/others.jpg
+
+The greatest showman:
+https://dobby.site/movies/the-greatest-showman-2017?_rsrc=chrome/newtab&_t=hna2u0&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef7.pcloud.com/DLZMQnnUEZwQWy9B7ZWjPfZ7ZScp3VkZNVZZnHXZZJNpZk5Z37ZGFZzmzYOj5s4F8zcc6CJUsR6XJoxdgk/showman.jpeg
+
+There’s something about Mary: https://dobby.site/movies/theres-something-about-mary-1998?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail:
+
+The mask:
+https://dobby.site/movies/the-mask-1994?pl=-1&_u=hchh6mwu5k&_t=763rjh&_rsrc=chrome/newtab
+Thumbnail:
+
+The phantom of the opera: https://dobby.site/movies/the-phantom-of-the-opera-2004?_u=hchh6mwu5k&_t=ia79jt&_rsrc=chrome/newtab
+Thumbnail: https://edef3.pcloud.com/DLZ8NAnUEZGJV79B7ZWjPfZ7ZvyH3VkZNVZZnHXZZXd6ZXkZxJZsJZTt9cXk3XhM56L7SPAhTWy4wK8LE7/phantom.jpg
+
+The open house: https://dobby.site/movies/the-open-house-2018?pl=-1&_u=hchh6mwu5k&_t=ia79jt&_rsrc=chrome/newtab
+Thumbnail: https://edef9.pcloud.com/DLZSBGhUEZgT8gnB7ZWjPfZ7ZC7H3VkZNVZZnHXZZ4M4ZHVZqFZiVZpLfSdFxx2sky4qgIfuFeGhjSs5Qk/openhouse.jpg
+
+The watchers: https://dobby.site/movies/the-watchers-2024?pl=-1&_u=hchh6mwu5k&_t=qgkarn&_rsrc=chrome/newtab
+Thumbnail: https://edef5.pcloud.com/DLZ1KGhUEZ7HQgnB7ZWjPfZ7Z5kH3VkZNVZZnHXZZkiCZ30ZD4ZBFZe6MwD2nOQipBjOovoShMASgxVBKk/watchers.jpg
+
+Under the mountain: https://dobby.site/movies/under-the-mountain-2009?_rsrc=chrome/newtab&_t=6a5lm2&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef11.pcloud.com/DLZOlGhUEZvLQgnB7ZWjPfZ7ZnkH3VkZNVZZnHXZZioaZyzZQpZO7Zy8Ab4yCqY67bJHPgG6jGiHg6CEMy/mountain.jpg
+
+Urban legend: https://dobby.site/list/Watch%20Later/83?_rsrc=chrome/newtab&_t=907cb9&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef4.pcloud.com/DLZWlGhUEZ5LQgnB7ZWjPfZ7ZAkH3VkZNVZZnHXZZhrbZz8ZOkZh5ZqG1IBUQGPUkwl2PVBi1SBLgdDsA7/urbanlegend.jpg
+
+Warm bodies: https://dobby.site/movies/warm-bodies-2013?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
+Thumbnail: https://edef8.pcloud.com/DLZdlGhUEZp8QgnB7ZWjPfZ7ZFXH3VkZNVZZnHXZZMIJZJ0Za5Z15ZQxGREXP9aSzVLlDFRYwWqjMYI3EV/warmbodies.jpg
+
+Wicked little letters: https://dobby.site/movies/wicked-little-letters-2024?_rsrc=chrome/newtab&_t=j7ij2s&_u=hchh6mwu5k&pl=-1
+Thumbnail: https://edef10.pcloud.com/DLZ2dGhUEZe8QgnB7ZWjPfZ7ZeXH3VkZNVZZnHXZZJ9gZ2pZiHZakZtXhdGOaSGtjamqxciKT0b7EiygQV/wickedlittle.jpg
+
+Wildling: https://dobby.site/movies/wildling-2018?_u=hchh6mwu5k&_t=2d04qs&_rsrc=chrome/newtab
+Thumbnail: https://edef4.pcloud.com/DLZw6j9UEZi70k9B7ZWjPfZ7ZH0H3VkZNVZZnHXZZ0AiZgVZbHZFzZQVUhvWlRJkBo6ICXtoLfm58KGggy/wildling.jpeg
   </script>
 
 <script>
-  /* === App JS (unchanged features) === */
+  /* ---------- CONFIG ---------- */
   const CATS = ['horror','thriller','fantasy','sci-fi','comedy','cartoon','porn','other'];
-  const STORAGE_KEYS = { movies:'castle.movies.v10', tv:'castle.tv.v10', porn:'castle.porn.v10' };
+  const STORAGE_KEYS = { movies:'castle.movies.v20', tv:'castle.tv.v20', porn:'castle.porn.v20' };
+
+  /* ---------- UTIL: parse your raw block (Title — URL, then optional "Thumbnail: URL") ---------- */
+  function parseRawList(raw){
+    const blocks = raw.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
+    const items = [];
+    const firstLineRe = /^(.+?)\s*[-:]\s*(https?:\/\/\S+)/i;
+    const thumbLineRe = /^thumbnail\s*:\s*(https?:\/\/\S+)?/i;
+
+    for(const b of blocks){
+      const lines = b.split(/\n/).map(s=>s.trim()).filter(Boolean);
+      if(!lines.length) continue;
+
+      // First line: Title - URL  (or Title: URL)
+      const m = lines[0].match(firstLineRe);
+      if(!m) continue;
+      const title = m[1].trim();
+      const link = m[2].trim();
+
+      // Find thumbnail (next line "Thumbnail: ..." or a naked URL line after it)
+      let img = null;
+      for(let i=1;i<lines.length;i++){
+        const t = lines[i];
+        const mt = t.match(thumbLineRe);
+        if(mt){
+          img = mt[1] ? mt[1].trim() : null;
+          if(!img && lines[i+1] && /^https?:\/\//i.test(lines[i+1])) img = lines[i+1].trim();
+          break;
+        }
+      }
+      items.push({title, link, img, categories:[]});
+    }
+    return items;
+  }
+
+  /* ---------- STORAGE LAYER ---------- */
   let section = document.body.dataset.section || 'movies';
   let currentFilter = 'All';
   const load = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEYS[section])) || []; } catch { return []; } };
   const save = (items) => localStorage.setItem(STORAGE_KEYS[section], JSON.stringify(items));
 
-  function setActiveTab(){ document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
-    const el = document.querySelector({movies:'#tabMovies', tv:'#tabTV', porn:'#tabPorn'}[section]); if(el) el.classList.add('active');
-    const addBtn = document.getElementById('addBtn'); if(addBtn) addBtn.textContent = section==='tv'?'Add Show':(section==='movies'?'Add Movie':'Add Link'); }
+  function preloadOnceFromRaw(){
+    if(section!=='movies') return;
+    const key = STORAGE_KEYS.movies;
+    if(localStorage.getItem(key)) return; // already seeded
 
-  function renderChips(items){ const wrap=document.getElementById('chips'); wrap.innerHTML='';
+    const rawTag = document.getElementById('seed-raw');
+    if(!rawTag) return;
+
+    const items = parseRawList(rawTag.textContent || rawTag.innerText || '');
+    if(items.length){
+      localStorage.setItem(key, JSON.stringify(items));
+    }
+  }
+
+  /* ---------- UI RENDER ---------- */
+  function setActiveTab(){
+    document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
+    const el = document.querySelector({movies:'#tabMovies', tv:'#tabTV', porn:'#tabPorn'}[section]);
+    if(el) el.classList.add('active');
+    const addBtn = document.getElementById('addBtn');
+    if(addBtn) addBtn.textContent = section==='tv'?'Add Show':(section==='movies'?'Add Movie':'Add Link');
+  }
+
+  function renderChips(items){
+    const wrap=document.getElementById('chips'); wrap.innerHTML='';
     const countFor=(c)=>items.filter(i=>(i.categories||[]).includes(c)).length;
-    ['All',...CATS].forEach(c=>{ const chip=document.createElement('div'); chip.className='chip'+(c===currentFilter?' active':'');
-      const count=c==='All'?items.length:countFor(c); chip.innerHTML=`<span>${c}</span> <span class="count">(${count})</span>`;
-      chip.onclick=()=>{currentFilter=c; render()}; wrap.appendChild(chip); }); }
+    ['All',...CATS].forEach(c=>{
+      const chip=document.createElement('div'); chip.className='chip'+(c===currentFilter?' active':'');
+      const count=c==='All'?items.length:countFor(c);
+      chip.innerHTML=`<span>${c}</span> <span class="count">(${count})</span>`;
+      chip.onclick=()=>{currentFilter=c; render()};
+      wrap.appendChild(chip);
+    });
+  }
 
-  function openPicker(preset=[]){ return new Promise(res=>{ const modal=document.getElementById('catModal'), grid=document.getElementById('cbGrid');
-      grid.innerHTML=''; CATS.forEach(c=>{ const row=document.createElement('label'); row.className='opt';
-        row.innerHTML=`<input type="checkbox" value="${c}" ${preset.includes(c)?'checked':''}><span>${c}</span>`; grid.appendChild(row); });
+  function openPicker(preset=[]){
+    return new Promise(res=>{
+      const modal=document.getElementById('catModal'), grid=document.getElementById('cbGrid');
+      grid.innerHTML='';
+      CATS.forEach(c=>{
+        const row=document.createElement('label'); row.className='opt';
+        row.innerHTML=`<input type="checkbox" value="${c}" ${preset.includes(c)?'checked':''}><span>${c}</span>`;
+        grid.appendChild(row);
+      });
       const ok=document.getElementById('confirmPick'), cancel=document.getElementById('cancelPick');
       const onOK=()=>{const picked=[...grid.querySelectorAll('input:checked')].map(i=>i.value); cleanup(); res(picked)};
-      const onCancel=()=>{cleanup(); res(null)}; function cleanup(){ok.removeEventListener('click',onOK);cancel.removeEventListener('click',onCancel);modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
-      ok.addEventListener('click',onOK); cancel.addEventListener('click',onCancel); modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }); }
+      const onCancel=()=>{cleanup(); res(null)};
+      function cleanup(){ok.removeEventListener('click',onOK);cancel.removeEventListener('click',onCancel);modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
+      ok.addEventListener('click',onOK); cancel.addEventListener('click',onCancel);
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    });
+  }
 
-  function makeMenu(onEditLink,onChangeCover,onEditCats,onDelete){ const wrap=document.createElement('div'); wrap.className='menu';
-      const btn=document.createElement('button'); btn.className='more-btn'; btn.textContent='…';
-      const panel=document.createElement('div'); panel.className='menu-panel';
-      const mk=(t,h)=>{const b=document.createElement('button'); b.className='menu-item'; b.textContent=t; b.onclick=(e)=>{e.preventDefault();e.stopPropagation();h();wrap.classList.remove('open')}; return b};
-      panel.appendChild(mk('Edit Link',onEditLink)); panel.appendChild(mk('Change Cover',onChangeCover));
-      panel.appendChild(mk('Edit Categories',onEditCats)); panel.appendChild(mk('Delete',onDelete));
-      btn.onclick=(e)=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open')};
-      document.addEventListener('click',(ev)=>{if(!wrap.contains(ev.target)) wrap.classList.remove('open')});
-      wrap.appendChild(btn); wrap.appendChild(panel); return wrap; }
+  function makeMenu(onEditLink,onChangeCover,onEditCats,onDelete){
+    const wrap=document.createElement('div'); wrap.className='menu';
+    const btn=document.createElement('button'); btn.className='more-btn'; btn.textContent='…';
+    const panel=document.createElement('div'); panel.className='menu-panel';
+    const mk=(t,h)=>{const b=document.createElement('button'); b.className='menu-item'; b.textContent=t; b.onclick=(e)=>{e.preventDefault();e.stopPropagation();h();wrap.classList.remove('open')};return b};
+    panel.appendChild(mk('Edit Link',onEditLink));
+    panel.appendChild(mk('Change Cover',onChangeCover));
+    panel.appendChild(mk('Edit Categories',onEditCats));
+    panel.appendChild(mk('Delete',onDelete));
+    btn.onclick=(e)=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open')};
+    document.addEventListener('click',(ev)=>{if(!wrap.contains(ev.target)) wrap.classList.remove('open')});
+    wrap.appendChild(btn); wrap.appendChild(panel); return wrap;
+  }
 
-  function card(item,idx,items){ const c=document.createElement('div'); c.className='card';
-      const a=document.createElement('a'); a.className='window'; a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
-      a.innerHTML=item.img?`<img src="${item.img}" alt="">`:`<div class="placeholder">No Thumbnail</div>`; c.appendChild(a);
-      const head=document.createElement('div'); head.className='row-head';
-      const t=document.createElement('div'); t.className='title'; t.innerHTML=`<a href="${item.link||'#'}" target="_blank" rel="noopener">${item.title||'Untitled'}</a>`; head.appendChild(t);
-      const menu=makeMenu(()=>{const u=prompt('Enter the link (URL):',item.link||''); if(u===null) return; const d=load(); d[idx].link=(u.trim()||'#'); save(d); render();},
-                          ()=>{const u=prompt('Thumbnail image URL (leave blank to remove):',item.img||''); if(u===null) return; const d=load(); d[idx].img=(u.trim()||null); save(d); render();},
-                          async()=>{const picked=await openPicker(item.categories||[]); if(picked===null) return; const d=load(); d[idx].categories=[...new Set(picked)]; save(d); render();},
-                          ()=>{if(confirm('Delete this item?')){const d=load(); d.splice(idx,1); save(d); render();}});
-      head.appendChild(menu); c.appendChild(head);
-      const chosen=document.createElement('div'); chosen.className='chosen';
-      (item.categories||[]).forEach(cat=>{const s=document.createElement('span'); s.className='cat'; s.textContent=cat; chosen.appendChild(s)}); c.appendChild(chosen); return c; }
+  function card(item,idx,items){
+    const c=document.createElement('div'); c.className='card';
+    const a=document.createElement('a'); a.className='window'; a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
+    a.innerHTML=item.img?`<img src="${item.img}" alt="">`:`<div class="placeholder">No Thumbnail</div>`; c.appendChild(a);
+    const head=document.createElement('div'); head.className='row-head';
+    const t=document.createElement('div'); t.className='title'; t.innerHTML=`<a href="${item.link||'#'}" target="_blank" rel="noopener">${item.title||'Untitled'}</a>`; head.appendChild(t);
+    const menu=makeMenu(
+      ()=>{const u=prompt('Enter the link (URL):',item.link||''); if(u===null) return; const d=load(); d[idx].link=(u.trim()||'#'); save(d); render();},
+      ()=>{const u=prompt('Thumbnail image URL (leave blank to remove):',item.img||''); if(u===null) return; const d=load(); d[idx].img=(u.trim()||null); save(d); render();},
+      async()=>{const picked=await openPicker(item.categories||[]); if(picked===null) return; const d=load(); d[idx].categories=[...new Set(picked)]; save(d); render();},
+      ()=>{if(confirm('Delete this item?')){const d=load(); d.splice(idx,1); save(d); render();}}
+    );
+    head.appendChild(menu); c.appendChild(head);
+    const chosen=document.createElement('div'); chosen.className='chosen';
+    (item.categories||[]).forEach(cat=>{const s=document.createElement('span'); s.className='cat'; s.textContent=cat; chosen.appendChild(s)});
+    c.appendChild(chosen); return c;
+  }
 
-  function render(){ setActiveTab(); const items=load(); renderChips(items); const grid=document.getElementById('grid'); grid.innerHTML='';
-      const vis=(currentFilter==='All')?items:items.filter(x=>(x.categories||[]).includes(currentFilter)); vis.forEach(it=>grid.appendChild(card(it, items.indexOf(it), items))); }
-  async function addItem(){ const link=prompt(`Enter the ${section==='tv'?'show':'link'} (URL):`)||'#';
-      const title=prompt(`Enter a title for this ${section==='tv'?'show':'link'}:`)||'Untitled';
-      const categories=await openPicker([]); if(categories===null) return;
-      const img=prompt('Thumbnail image URL (optional):')||null; const items=load(); items.push({link,title,img,categories:[...new Set(categories)]}); save(items); currentFilter='All'; render();}
+  function render(){
+    setActiveTab();
+    const items=load(); renderChips(items);
+    const grid=document.getElementById('grid'); grid.innerHTML='';
+    const vis=(currentFilter==='All')?items:items.filter(x=>(x.categories||[]).includes(currentFilter));
+    vis.forEach(it=>grid.appendChild(card(it, items.indexOf(it), items)));
+  }
+
+  async function addItem(){
+    const link=prompt(`Enter the ${section==='tv'?'show':'link'} (URL):`)||'#';
+    const title=prompt(`Enter a title for this ${section==='tv'?'show':'link'}:`)||'Untitled';
+    const categories=await openPicker([]); if(categories===null) return;
+    const img=prompt('Thumbnail image URL (optional):')||null;
+    const items=load(); items.push({link,title,img,categories:[...new Set(categories)]});
+    save(items); currentFilter='All'; render();
+  }
+
   function setSection(s){ section=s; currentFilter='All'; render(); }
 
-  function preloadOnce(){ if(section!=='movies') return; const key=STORAGE_KEYS.movies; if(localStorage.getItem(key)) return;
-      const tag=document.getElementById('seed-movies'); if(!tag) return; try{const data=JSON.parse(tag.textContent.trim()||'[]'); localStorage.setItem(key, JSON.stringify(data));}catch(e){console.error('Seed parse failed',e)} }
-
-  /* Background & logo: show remote immediately, then swap to local if present */
   function setupImages(){
     const bg=document.getElementById('bg');
     if(bg.complete) bg.classList.add('show'); else bg.addEventListener('load',()=>bg.classList.add('show'));
-
-    const testBg=new Image(); testBg.onload=()=>{ bg.src='assets/castlebg.jpeg?v=6' }; testBg.src='assets/castlebg.jpeg?v=6';
-    const logo=document.getElementById('logo'); const testLogo=new Image(); testLogo.onload=()=>{ logo.src='assets/logo.png?v=6' }; testLogo.src='assets/logo.png?v=6';
+    // Optional local asset swap (if you later host /assets locally)
+    const testBg=new Image(); testBg.onload=()=>{ bg.src='assets/castlebg.jpeg?v=20' }; testBg.src='assets/castlebg.jpeg?v=20';
+    const logo=document.getElementById('logo'); const testLogo=new Image(); testLogo.onload=()=>{ logo.src='assets/logo.png?v=20' }; testLogo.src='assets/logo.png?v=20';
   }
 
   window.addEventListener('DOMContentLoaded', ()=>{
-    preloadOnce();
+    preloadOnceFromRaw();
     setupImages();
-
     document.getElementById('tabMovies')?.addEventListener('click', ()=>setSection('movies'));
     document.getElementById('tabTV')?.addEventListener('click', ()=>setSection('tv'));
     document.getElementById('tabPorn')?.addEventListener('click', ()=>setSection('porn'));
     document.getElementById('addBtn')?.addEventListener('click', addItem);
-
     render();
   });
 </script>
