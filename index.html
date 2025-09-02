@@ -1,416 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Aiden’s Entertainment — Movies</title>
-
-<!-- Preload remote assets -->
-<link rel="preload" as="image" href="https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=23">
-<link rel="preload" as="image" href="https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=23">
-
-<style>
-  :root{
-    /* === Master neon colour: tweak this to match your swatch === */
-    --neon-base:#4C3BFF;      /* your purple */
-    --neon-core:#d9d3ff;      /* inner light */
-    --neon-mid: color-mix(in oklab, var(--neon-base) 80%, white 20%);
-    --neon-outer: color-mix(in oklab, var(--neon-base) 60%, black 40%);
-
-    --card-w:3cm; --card-h:3cm; --header-z:1000;
-  }
-
-  html,body{height:100%;margin:0}
-  body{
-    background:#09080f;
-    color:#fff;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    overflow-x:hidden;
-  }
-
-  /* BACKGROUND */
-  .bg{
-    position:fixed; inset:0; z-index:-3;
-    background:
-      radial-gradient(60% 30% at 50% 10%, color-mix(in oklab, var(--neon-base) 25%, transparent), transparent 70%),
-      #0b0913;
-  }
-  .bg img{
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; object-position:center top; opacity:0; transition:opacity .35s ease;
-  }
-  .bg img.show{opacity:1}
-
-  .bg-glow{
-    position:fixed; inset:0; z-index:-2; pointer-events:none;
-    background:
-      radial-gradient(50% 22% at 50% 8%, color-mix(in oklab, var(--neon-base) 55%, transparent), transparent 60%),
-      radial-gradient(40% 16% at 50% 8%, color-mix(in oklab, var(--neon-core) 75%, transparent), transparent 70%);
-    animation: glowPulse 4.2s ease-in-out infinite, glowFlicker 7s linear infinite;
-    mix-blend-mode:screen;
-  }
-  @keyframes glowPulse{0%,100%{opacity:.55}50%{opacity:.95}}
-  @keyframes glowFlicker{0%,19%,21%,23%,25%,54%,56%,100%{filter:brightness(1)}20%,24%,55%{filter:brightness(1.12)}}
-
-  /* HEADER */
-  header{position:sticky; top:0; z-index:var(--header-z); display:flex; flex-direction:column; align-items:center}
-  .logo-wrap{width:100%; display:flex; justify-content:center; padding:6px 0 4px}
-  .logo{
-    width:min(520px,92vw);
-    filter:
-      drop-shadow(0 0 6px var(--neon-core))
-      drop-shadow(0 0 12px var(--neon-base))
-      drop-shadow(0 0 32px var(--neon-outer));
-    animation:logoPulse 3s infinite;
-  }
-  @keyframes logoPulse{
-    0%,100%{filter:drop-shadow(0 0 6px var(--neon-core)) drop-shadow(0 0 12px var(--neon-base)) drop-shadow(0 0 32px var(--neon-outer))}
-    50%{filter:drop-shadow(0 0 12px var(--neon-core)) drop-shadow(0 0 24px var(--neon-base)) drop-shadow(0 0 56px var(--neon-outer))}
-  }
-
-  .nav-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 10px}
-  .btn-neon{
-    padding:10px 16px; font-size:1rem; font-weight:800; text-transform:uppercase; letter-spacing:.4px;
-    color:var(--neon-core); background:#111;
-    border:2px solid var(--neon-base); border-radius:12px; cursor:pointer; text-decoration:none;
-    box-shadow:0 0 12px color-mix(in oklab, var(--neon-base) 65%, transparent),
-               inset 0 0 10px color-mix(in oklab, var(--neon-base) 35%, transparent);
-  }
-  .btn-neon:hover{background:var(--neon-base); color:#000}
-  .btn-tab.active{background:var(--neon-base); color:#000}
-
-  .chips{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:0 0 10px}
-  .chip{
-    padding:5px 10px; border:1px solid var(--neon-base); border-radius:999px; cursor:pointer;
-    color:#efeaff; background:rgba(16,12,28,.55);
-    box-shadow:inset 0 0 12px color-mix(in oklab, var(--neon-base) 30%, transparent),
-               0 0 12px color-mix(in oklab, var(--neon-base) 20%, transparent);
-    font-size:.88rem; user-select:none
-  }
-  .chip.active{border-color:#fff; color:#fff; box-shadow:0 0 16px color-mix(in oklab, var(--neon-base) 55%, transparent)}
-
-  main{padding:8px 10px 48px}
-  #grid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:0}
-
-  .card{display:inline-block;text-align:center;max-width:calc(var(--card-w) + 2rem)}
-  .window{
-    position:relative; width:var(--card-w); height:var(--card-h);
-    border-radius:12px; overflow:hidden; display:block;
-    filter: drop-shadow(0 0 6px var(--neon-core))
-            drop-shadow(0 0 14px var(--neon-base))
-            drop-shadow(0 0 28px var(--neon-outer));
-  }
-  .window img{width:100%; height:100%; object-fit:cover; border-radius:12px; display:block}
-  .placeholder{
-    width:100%; height:100%; display:grid; place-items:center; background:rgba(8,8,12,.55);
-    color:#d9d3ff; font-weight:700; text-shadow:0 0 10px var(--neon-base); border-radius:12px
-  }
-  .window::after{
-    content:""; position:absolute; inset:0; border-radius:12px; pointer-events:none; border:3px solid var(--neon-core);
-    box-shadow:0 0 6px 2px var(--neon-base), 0 0 16px 6px var(--neon-base), 0 0 36px 10px var(--neon-outer);
-    animation:frameFlicker 3s infinite;
-  }
-  @keyframes frameFlicker{0%,19%,21%,23%,25%,54%,56%,100%{opacity:1}20%,24%,55%{opacity:.78}}
-
-  .row-head{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:4px}
-  .title{font-size:.9rem;color:#efeaff;text-shadow:0 0 8px color-mix(in oklab, var(--neon-base) 45%, transparent)}
-  .title a{color:#efeaff;text-decoration:none}
-  .title a:hover{text-decoration:underline}
-
-  .menu{position:relative;display:inline-block}
-  .more-btn{
-    padding:2px 8px;border-radius:10px;cursor:pointer;
-    border:1px solid var(--neon-base);background:rgba(18,14,28,.7);color:var(--neon-core);
-    box-shadow:0 0 6px color-mix(in oklab, var(--neon-base) 35%, transparent),
-               inset 0 0 6px color-mix(in oklab, var(--neon-base) 20%, transparent);
-    font-weight:800
-  }
-  .more-btn:hover{background:var(--neon-base);color:#000}
-  .menu-panel{
-    position:absolute;left:50%;transform:translateX(-50%);margin-top:6px;min-width:180px;z-index:5;background:#100e1a;
-    border:1px solid var(--neon-base);border-radius:12px;
-    box-shadow:0 0 18px color-mix(in oklab, var(--neon-base) 40%, transparent);
-    padding:6px;display:none
-  }
-  .menu.open .menu-panel{display:block}
-  .menu-item{display:block;width:100%;text-align:left;padding:8px 10px;margin:2px 0;background:transparent;border:1px solid color-mix(in oklab, var(--neon-base) 35%, transparent);border-radius:10px;color:#eedeff;cursor:pointer}
-  .menu-item:hover{background:var(--neon-base);color:#000;border-color:var(--neon-base)}
-
-  .chosen{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
-  .chosen .cat{
-    padding:3px 8px;border:1px solid color-mix(in oklab, var(--neon-base) 65%, transparent);border-radius:999px;font-size:.72rem;color:#f0e8ff;background:rgba(24,18,38,.55);
-    box-shadow:inset 0 0 8px color-mix(in oklab, var(--neon-base) 22%, transparent)
-  }
-
-  /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(8,6,14,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:2000}
-  .modal.open{display:flex}
-  .panel{background:#0e0c18;border:1px solid var(--neon-base);border-radius:14px;box-shadow:0 0 24px color-mix(in oklab, var(--neon-base) 40%, transparent);padding:14px 16px;width:min(520px,92vw)}
-  .grid-cb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
-  .opt{display:flex;align-items:center;gap:8px}
-  .modal-actions{display:flex;justify-content:flex-end;gap:10px}
-</style>
-</head>
-<body data-section="movies">
-  <!-- background layer & image -->
-  <div class="bg" aria-hidden="true">
-    <img id="bgimg" alt="">
-  </div>
-  <div class="bg-glow" aria-hidden="true"></div>
-
-  <!-- header -->
-  <header>
-    <div class="logo-wrap">
-      <img id="logo" class="logo" alt="AIDEN’S ENTERTAINMENT">
-    </div>
-
-    <nav class="nav-bar">
-      <a id="tabMovies" class="btn-neon btn-tab">MOVIES</a>
-      <a id="tabTV" class="btn-neon btn-tab">TV SHOWS</a>
-      <a id="tabPorn" class="btn-neon btn-tab">PORN</a>
-      <button id="addBtn" class="btn-neon">ADD MOVIE</button>
-    </nav>
-
-    <div id="chips" class="chips"></div>
-  </header>
-
-  <main><div id="grid"></div></main>
-
-  <!-- Category picker -->
-  <div id="catModal" class="modal" aria-hidden="true">
-    <div class="panel">
-      <h3>Select categories</h3>
-      <div id="cbGrid" class="grid-cb"></div>
-      <div class="modal-actions">
-        <button id="cancelPick" class="btn-neon" type="button">Cancel</button>
-        <button id="confirmPick" class="btn-neon" type="button">Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Your pasted list (same format you gave me) -->
-  <script id="seed-raw" type="text/plain">
-28 days later- https://dobby.site/movies/28-days-later-dot-dot-dot-2002?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
-thumbnail: https://edef10.pcloud.com/DLZ8ofLtEZO8STuB7ZWjPfZ7ZEPF3VkZNVZZnHXZZ7vkZW4ZL8Z7QZuM5Jl6HpFQ7GLL1oVDQIvSgbASH7/28days.jpg
-
-28 weeks later- https://dobby.site/movies/28-weeks-later-2007?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
-thumbnail: https://edef9.pcloud.com/DLZ4d3hUEZf04gnB7ZWjPfZ7ZtxF3VkZNVZZnHXZZAgRZIHZmkZ50ZSB8SqHieakfjmrJBoUO9uHE2ODOy/28weeks.jpg
-
-30 days of night- https://dobby.site/movies/30-days-of-night-2007?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
-thumbnail: https://edef4.pcloud.com/DLZAl3hUEZ6V4gnB7ZWjPfZ7ZzwF3VkZNVZZnHXZZ1PgZRzZtJZDHZ9zNE2RdJhbYhPCaUePALeL5pLGUy/30days.jpg
-
-Addams Family: https://dobby.site/movies/the-addams-family-1991?pl=-1&_u=hchh6mwu5k&_t=33dp8k&_rsrc=chrome/newtab
-Thumbnail: https://edef10.pcloud.com/DLZyq3hUEZup4gnB7ZWjPfZ7ZPoF3VkZNVZZnHXZZmlsZwHZK4Z25Z5Nh4IsQk7CuAdLw9R62bzjyIrHLk/addams.jpg
-
-Addams Family values: https://dobby.site/movies/addams-family-values-1993?_rsrc=chrome/newtab&_t=33dp8k&_u=hchh6mwu5k&pl=-1
-Thumbnail: https://edef7.pcloud.com/DLZGO3hUEZQh4gnB7ZWjPfZ7ZYyp3VkZNVZZnHXZZIPh7Z1RZPpZ1XZF94gu8JfLS7FtC17Bkie54GHYoKk/addams2.jpg
-
-A simple favour: https://dobby.site/movies/a-simple-favor-2018?_rsrc=chrome/newtab&_t=7gl997&_u=hchh6mwu5k&pl=-1
-Thumbnail: https://edef5.pcloud.com/DLZol3hUEZiV4gnB7ZWjPfZ7ZF7p3VkZNVZZnHXZZG85Z1FZ9XZiLZiSaI2OvWbG0YnuSbturu0FSxG8Ey/simplefavour.jpg
-
-Artificial Intelligence: https://dobby.site/movies/ai-artificial-intelligence-2001?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
-Thumbnail: https://edef6.pcloud.com/DLZ5t3hUEZlJ4gnB7ZWjPfZ7Zlyp3VkZNVZZnHXZZfq27Z55ZkkZNRZcdpXzu4TWdhJ9ijXGwsFERAvncSX/ai.jpg
-
-Alien- https://dobby.site/movies/alien-1979?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab
-Thumbnail: https://edef9.pcloud.com/DLZl63hUEZ444gnB7ZWjPfZ7Z97p3VkZNVZZnHXZZtgwZxHZuHZRpZNEpKfieYG9HYNKcj8Nm2cXbcdjwk/alien.jpg
-<!-- … keep the rest of your list here … -->
-  </script>
-
-<script>
-/* ===== CONFIG ===== */
-const CATS = ['horror','thriller','fantasy','sci-fi','comedy','cartoon','porn','other'];
-const STORAGE_KEYS = { movies:'castle.movies.v23', tv:'castle.tv.v23', porn:'castle.porn.v23' };
-let section = document.body.dataset.section || 'movies';
-let currentFilter = 'All';
-
-/* ===== UTIL ===== */
-function slugify(s){
-  return (s||'').toLowerCase()
-    .replace(/&/g,' and ')
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'');
-}
-
-/* Parse pasted blocks: "Title - URL" + optional "thumbnail:" line */
-function parseRawList(raw){
-  const blocks = raw.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
-  const items=[];
-  const firstLineRe=/^(.+?)\s*[-:]\s*(https?:\/\/\S+)/i;
-  const thumbRe=/^thumbnail\s*:\s*(https?:\/\/\S+)?/i;
-  for(const b of blocks){
-    const lines=b.split(/\n/).map(x=>x.trim()).filter(Boolean);
-    if(!lines.length) continue;
-    const m=lines[0].match(firstLineRe);
-    if(!m) continue;
-    const title=m[1].trim(), link=m[2].trim();
-    let img=null;
-    for(let i=1;i<lines.length;i++){
-      const mt=lines[i].match(thumbRe);
-      if(mt){
-        img = mt[1] ? mt[1].trim() : null;
-        if(!img && lines[i+1] && /^https?:\/\//i.test(lines[i+1])) img=lines[i+1].trim();
-        break;
-      }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aiden’s Entertainment</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url("assets/castlebg.jpeg") no-repeat center top fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
     }
-    items.push({title, link, img, categories:[]});
-  }
-  return items;
-}
 
-/* ===== STORAGE ===== */
-const load = ()=>{ try{return JSON.parse(localStorage.getItem(STORAGE_KEYS[section]))||[]}catch{return[]} };
-const save = items => localStorage.setItem(STORAGE_KEYS[section], JSON.stringify(items));
-function preloadOnce(){
-  if(section!=='movies') return;
-  if(localStorage.getItem(STORAGE_KEYS.movies)) return;
-  const raw = (document.getElementById('seed-raw')?.textContent||'').trim();
-  if(!raw) return;
-  const parsed = parseRawList(raw);
-  if(parsed.length) localStorage.setItem(STORAGE_KEYS.movies, JSON.stringify(parsed));
-}
+    .logo {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      animation: pulse 3s infinite;
+    }
 
-/* ===== IMAGE HELPERS ===== */
+    .logo img {
+      max-width: 500px;
+      width: 80%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 20px #7d5fff) drop-shadow(0 0 40px #7d5fff);
+    }
 
-/* Background + Logo robust loader */
-function setImgWithFallback(imgEl, sources){
-  let i=0;
-  const tryNext=()=>{ if(i>=sources.length){ return; } imgEl.src=sources[i++]; };
-  imgEl.onerror=tryNext;
-  imgEl.onload=()=>imgEl.classList.add('show');
-  tryNext();
-}
-function setupBackgroundAndLogo(){
-  const bg = document.getElementById('bgimg');
-  const logo = document.getElementById('logo');
+    @keyframes pulse {
+      0%, 100% { filter: drop-shadow(0 0 10px #7d5fff) drop-shadow(0 0 20px #7d5fff); }
+      50% { filter: drop-shadow(0 0 30px #7d5fff) drop-shadow(0 0 60px #7d5fff); }
+    }
 
-  setImgWithFallback(bg, [
-    'assets/castlebg.jpeg?v=23',
-    'https://edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=23',
-    'https://images.weserv.nl/?url=' + encodeURIComponent('edef3.pcloud.com/DLZt042qEZnDxISB7ZWjPfZ7ZjJqaVkZNVZZnHXZZPUd7ZS0Ze0ZTpZJEop2M3fd58Vl0qNBzUo3Vf8n4n7/castlebg.jpeg?v=23')
-  ]);
+    .menu {
+      margin-bottom: 20px;
+    }
 
-  setImgWithFallback(logo, [
-    'assets/logo.png?v=23',
-    'https://edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=23',
-    'https://images.weserv.nl/?url=' + encodeURIComponent('edef11.pcloud.com/DLZh51BqEZ2pnOSB7ZWjPfZ7ZXFqaVkZ3VZZnHXZZsaN5ZwJZXJZJVZxoibDOlI51uhh5jphbiJgBhNz98X/aidensent.png?v=23')
-  ]);
-}
+    .menu button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: 1px solid #7d5fff;
+      background: transparent;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #7d5fff, 0 0 20px #7d5fff inset;
+    }
 
-/* Thumbnails: local → remote → proxy → placeholder */
-function buildThumb(src, title){
-  const local=`assets/thumbs/${slugify(title)}.jpg`;
-  const proxy = src ? 'https://images.weserv.nl/?url='+encodeURIComponent(src) : '';
-  const img=document.createElement('img');
-  img.loading='lazy'; img.decoding='async'; img.referrerPolicy='no-referrer';
-  let stage=0;
-  img.onerror=()=>{
-    stage++;
-    if(stage===1){ img.src = src || proxy || ''; return; }
-    if(stage===2 && src){ img.src = proxy || ''; return; }
-    img.replaceWith(Object.assign(document.createElement('div'), {className:'placeholder', textContent:'No Thumbnail'}));
-  };
-  img.src = local; // try local first
-  return img;
-}
+    .menu button:hover {
+      background: #7d5fff;
+    }
 
-/* ===== UI ===== */
-function setActiveTab(){
-  document.querySelectorAll('.btn-tab').forEach(b=>b.classList.remove('active'));
-  const el = document.querySelector({movies:'#tabMovies', tv:'#tabTV', porn:'#tabPorn'}[section]);
-  if(el) el.classList.add('active');
-  document.getElementById('addBtn').textContent = section==='tv'?'ADD SHOW':(section==='movies'?'ADD MOVIE':'ADD LINK');
-}
-function renderChips(items){
-  const wrap=document.getElementById('chips'); wrap.innerHTML='';
-  const countFor=c=>items.filter(i=>(i.categories||[]).includes(c)).length;
-  ['All',...CATS].forEach(c=>{
-    const chip=document.createElement('div'); chip.className='chip'+(c===currentFilter?' active':'');
-    const count=c==='All'?items.length:countFor(c);
-    chip.innerHTML=`<span>${c}</span> <span class="count">(${count})</span>`;
-    chip.onclick=()=>{currentFilter=c; render()};
-    wrap.appendChild(chip);
-  });
-}
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 20px;
+    }
 
-function openPicker(preset=[]){
-  return new Promise(res=>{
-    const modal=document.getElementById('catModal'), grid=document.getElementById('cbGrid');
-    grid.innerHTML=''; CATS.forEach(c=>{ const row=document.createElement('label'); row.className='opt'; row.innerHTML=`<input type="checkbox" value="${c}" ${preset.includes(c)?'checked':''}><span>${c}</span>`; grid.appendChild(row);});
-    const ok=document.getElementById('confirmPick'), cancel=document.getElementById('cancelPick');
-    const onOK=()=>{const picked=[...grid.querySelectorAll('input:checked')].map(i=>i.value); cleanup(); res(picked)};
-    const onCancel=()=>{cleanup(); res(null)};
-    function cleanup(){ok.removeEventListener('click',onOK);cancel.removeEventListener('click',onCancel);modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
-    ok.addEventListener('click',onOK); cancel.addEventListener('click',onCancel);
-    modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-  });
-}
+    .card {
+      width: 120px;
+      text-align: center;
+      position: relative;
+    }
 
-function makeMenu(onEditLink,onChangeCover,onEditCats,onDelete){
-  const wrap=document.createElement('div'); wrap.className='menu';
-  const btn=document.createElement('button'); btn.className='more-btn'; btn.textContent='…';
-  const panel=document.createElement('div'); panel.className='menu-panel';
-  const mk=(t,h)=>{const b=document.createElement('button'); b.className='menu-item'; b.textContent=t; b.onclick=(e)=>{e.preventDefault();e.stopPropagation();h();wrap.classList.remove('open')};return b};
-  panel.appendChild(mk('Edit Link',onEditLink));
-  panel.appendChild(mk('Change Cover',onChangeCover));
-  panel.appendChild(mk('Edit Categories',onEditCats));
-  panel.appendChild(mk('Delete',onDelete));
-  btn.onclick=(e)=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open')};
-  document.addEventListener('click',(ev)=>{if(!wrap.contains(ev.target)) wrap.classList.remove('open')});
-  wrap.appendChild(btn); wrap.appendChild(panel); return wrap;
-}
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #7d5fff, 0 0 30px #7d5fff;
+    }
 
-function card(item,idx,items){
-  const c=document.createElement('div'); c.className='card';
-  const a=document.createElement('a'); a.className='window'; a.href=item.link||'#'; a.target='_blank'; a.rel='noopener';
-  a.appendChild(buildThumb(item.img||'', item.title||'')); c.appendChild(a);
+    .card .title {
+      margin-top: 5px;
+      font-size: 14px;
+    }
 
-  const head=document.createElement('div'); head.className='row-head';
-  const t=document.createElement('div'); t.className='title';
-  t.innerHTML=`<a href="${item.link||'#'}" target="_blank" rel="noopener">${item.title||'Untitled'}</a>`;
-  head.appendChild(t);
-  const menu=makeMenu(
-    ()=>{const u=prompt('Enter the link (URL):',item.link||''); if(u===null) return; const d=load(); d[idx].link=(u.trim()||'#'); save(d); render();},
-    ()=>{const u=prompt('Thumbnail image URL (optional, leave blank to remove):',item.img||''); if(u===null) return; const d=load(); d[idx].img=(u.trim()||null); save(d); render();},
-    async()=>{const picked=await openPicker(item.categories||[]); if(picked===null) return; const d=load(); d[idx].categories=[...new Set(picked)]; save(d); render();},
-    ()=>{if(confirm('Delete this item?')){const d=load(); d.splice(idx,1); save(d); render();}}
-  );
-  head.appendChild(menu); c.appendChild(head);
+    .card .menu {
+      margin-top: 5px;
+    }
 
-  const chosen=document.createElement('div'); chosen.className='chosen';
-  (item.categories||[]).forEach(cat=>{const s=document.createElement('span'); s.className='cat'; s.textContent=cat; chosen.appendChild(s)});
-  c.appendChild(chosen);
-  return c;
-}
+    .placeholder {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(125, 95, 255, 0.2);
+      border: 2px dashed #7d5fff;
+      border-radius: 10px;
+      color: #aaa;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Logo -->
+  <div class="logo">
+    <img src="assets/aidensent.png" alt="Aiden’s Entertainment">
+  </div>
 
-function render(){
-  setActiveTab();
-  const items=load(); renderChips(items);
-  const grid=document.getElementById('grid'); grid.innerHTML='';
-  const vis=(currentFilter==='All')?items:items.filter(x=>(x.categories||[]).includes(currentFilter));
-  vis.forEach(it=>grid.appendChild(card(it, items.indexOf(it), items)));
-}
+  <!-- Menu -->
+  <div class="menu">
+    <button>MOVIES</button>
+    <button>TV SHOWS</button>
+    <button>PORN</button>
+    <button>ADD MOVIE</button>
+  </div>
 
-async function addItem(){
-  const link=prompt(`Enter the ${section==='tv'?'show':'link'} (URL):`)||'#';
-  const title=prompt(`Enter a title:`)||'Untitled';
-  const categories=await openPicker([]); if(categories===null) return;
-  const img=prompt('Thumbnail image URL (optional):')||null;
-  const items=load(); items.push({link,title,img,categories:[...new Set(categories)]});
-  save(items); currentFilter='All'; render();
-}
+  <!-- Grid -->
+  <div id="grid" class="grid"></div>
 
-function setSection(s){ section=s; currentFilter='All'; render(); }
+  <script>
+    // Movies dataset (sample subset, add the rest)
+    const movies = [
+      {
+        title: "28 Days Later",
+        url: "https://dobby.site/movies/28-days-later-dot-dot-dot-2002?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab",
+        img: "28days.jpg"
+      },
+      {
+        title: "28 Weeks Later",
+        url: "https://dobby.site/movies/28-weeks-later-2007?_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab",
+        img: "28weeks.jpg"
+      },
+      {
+        title: "30 Days of Night",
+        url: "https://dobby.site/movies/30-days-of-night-2007?pl=-1&_u=hchh6mwu5k&_t=bq0t40&_rsrc=chrome/newtab",
+        img: "30days.jpg"
+      },
+      {
+        title: "Addams Family",
+        url: "https://dobby.site/movies/the-addams-family-1991?pl=-1&_u=hchh6mwu5k&_t=33dp8k&_rsrc=chrome/newtab",
+        img: "addams.jpg"
+      }
+    ];
 
-/* ===== BOOT ===== */
-window.addEventListener('DOMContentLoaded', ()=>{
-  preloadOnce();
-  setupBackgroundAndLogo();
-  document.getElementById('tabMovies')?.addEventListener('click', ()=>setSection('movies'));
-  document.getElementById('tabTV')?.addEventListener('click', ()=>setSection('tv'));
-  document.getElementById('tabPorn')?.addEventListener('click', ()=>setSection('porn'));
-  document.getElementById('addBtn')?.addEventListener('click', addItem);
-  render();
-});
-</script>
+    // Utility: slugify titles
+    function slugify(s) {
+      return (s||'').toLowerCase()
+        .replace(/&/g,' and ')
+        .replace(/[^a-z0-9]+/g,'-')
+        .replace(/^-+|-+$/g,'');
+    }
+
+    // Build thumbnail element with local + remote fallbacks
+    function buildThumb(src, title) {
+      const exts = ['jpg','jpeg','png','webp'];
+      const tryList = [];
+
+      // Local by provided src (basename only)
+      if (src) tryList.push(`assets/thumbs/${src}`);
+
+      // Local by slug
+      const slug = slugify(title || '');
+      if (slug) exts.forEach(ext => tryList.push(`assets/thumbs/${slug}.${ext}`));
+
+      // Remote URL
+      if (src && src.startsWith("http")) tryList.push(src);
+
+      // Proxy fallback
+      if (src && src.startsWith("http")) tryList.push('https://images.weserv.nl/?url=' + encodeURIComponent(src));
+
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.referrerPolicy = 'no-referrer';
+
+      let i = 0;
+      const tryNext = () => {
+        if (i >= tryList.length) {
+          img.replaceWith(Object.assign(document.createElement('div'), {className:'placeholder', textContent:'No Thumbnail'}));
+          return;
+        }
+        img.src = tryList[i++];
+      };
+
+      img.onerror = tryNext;
+      img.onload = () => {};
+      tryNext();
+
+      return img;
+    }
+
+    // Render movie cards
+    const grid = document.getElementById('grid');
+    movies.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.target = '_blank';
+
+      a.appendChild(buildThumb(item.img, item.title));
+      card.appendChild(a);
+
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = item.title;
+      card.appendChild(title);
+
+      grid.appendChild(card);
+    });
+  </script>
 </body>
 </html>
